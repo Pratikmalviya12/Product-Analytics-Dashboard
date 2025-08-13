@@ -1,0 +1,121 @@
+# Dependencies - DON'T PUSH THESE (too large, can be reinstalled)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build outputs - DON'T PUSH (generated files)
+dist/
+build/
+.vite/
+.next/
+out/
+
+# Environment variables - DON'T PUSH (contains secrets)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# API Keys and Secrets - NEVER PUSH THESE
+config/secrets.json
+src/config/keys.js
+*.key
+*.pem
+service-account.json
+google-credentials.json
+
+# IDE and Editor files - DON'T PUSH (personal preferences)
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.sublime-project
+.sublime-workspace
+
+# OS generated files - DON'T PUSH (system files)
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Logs - DON'T PUSH (can be large and not needed)
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data - DON'T PUSH
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory - DON'T PUSH (test reports)
+coverage/
+*.lcov
+.nyc_output/
+
+# Dependency directories - DON'T PUSH
+jspm_packages/
+
+# Optional npm cache directory - DON'T PUSH
+.npm
+
+# Optional eslint cache - DON'T PUSH
+.eslintcache
+
+# Microbundle cache - DON'T PUSH
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history - DON'T PUSH
+.node_repl_history
+
+# Output of 'npm pack' - DON'T PUSH
+*.tgz
+
+# Yarn Integrity file - DON'T PUSH
+.yarn-integrity
+
+# Temporary folders - DON'T PUSH
+tmp/
+temp/
+
+# Editor directories and files - DON'T PUSH
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local Netlify folder - DON'T PUSH
+.netlify
+
+# Vercel - DON'T PUSH
+.vercel
+
+# Stores VSCode versions used for testing VSCode extensions - DON'T PUSH
+.vscode-test
+
+# yarn v2 - DON'T PUSH
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
