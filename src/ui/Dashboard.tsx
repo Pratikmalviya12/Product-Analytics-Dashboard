@@ -2,6 +2,8 @@ import React from 'react'
 import { create } from 'zustand'
 import { theme } from '../lib/theme'
 import { Button, Card, StatusBadge, Input, LoadingSpinner, Select } from './components'
+import { ThemeToggle } from './ThemeToggle'
+import { EventsTable } from '../features/table/EventsTable'
 
 // Enhanced Zustand store with GA4 integration
 const useStore = create((set, get) => ({
@@ -68,6 +70,7 @@ function generateEvents(seed, count = 50000) {
   const eventTypes = ['page_view', 'click', 'signup', 'purchase']
   const devices = ['desktop', 'mobile', 'tablet']
   const countries = ['US', 'UK', 'CA', 'DE', 'FR', 'JP', 'AU', 'BR']
+  const pages = ['/home', '/product', '/checkout', '/about', '/contact', '/blog', '/pricing', '/login']
   
   let random = seed
   const nextRandom = () => {
@@ -90,6 +93,7 @@ function generateEvents(seed, count = 50000) {
       event,
       device: devices[Math.floor(nextRandom() * devices.length)],
       country: countries[Math.floor(nextRandom() * countries.length)],
+      url: pages[Math.floor(nextRandom() * pages.length)],
       revenue: event === 'purchase' ? Math.floor(nextRandom() * 500) + 10 : 0
     })
   }
@@ -383,8 +387,8 @@ const GA4Setup = () => {
   
   return (
     <Card className="glass-card">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-        <h3 style={{ margin: 0, color: '#333', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '18px', fontWeight: '600' }}>
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-gray-900 dark:text-gray-100 text-lg font-semibold m-0 flex items-center gap-2">
           🔗 Data Source Configuration
           {ga4Config.isAuthenticated && (
             <StatusBadge status="success">
@@ -402,8 +406,8 @@ const GA4Setup = () => {
       </div>
       
       {/* Data Source Toggle */}
-      <div style={{ marginBottom: '15px' }}>
-        <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#333', fontSize: '14px' }}>
+      <div className="mb-4">
+        <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
           Data Source:
         </label>
         <div className="flex gap-3">
@@ -427,24 +431,24 @@ const GA4Setup = () => {
       
       {/* GA4 Setup Form */}
       {showSetup && (
-        <Card className="bg-gradient-to-br from-gray-50 to-indigo-50 border border-indigo-200">
-          <h4 style={{ margin: '0 0 15px 0', color: '#333', fontSize: '16px', fontWeight: '600' }}>🚀 Google Analytics 4 Setup</h4>
+        <Card className="bg-gradient-to-br from-gray-50 to-indigo-50 dark:from-gray-800 dark:to-indigo-900 border border-indigo-200 dark:border-indigo-700">
+          <h4 className="text-gray-900 dark:text-gray-100 text-base font-semibold mb-4">🚀 Google Analytics 4 Setup</h4>
           
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500', color: '#333', fontSize: '14px' }}>
+              <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
                 Property ID:
               </label>
               <Input
                 type="text"
                 placeholder="e.g., 123456789"
                 value={ga4Config.propertyId}
-                onChange={(e) => setGA4Config({ propertyId: e.target.value })}
+                onChange={(e: any) => setGA4Config({ propertyId: e.target.value })}
               />
             </div>
             
             <div>
-              <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500', color: '#333', fontSize: '14px' }}>
+              <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
                 Service Account JSON:
               </label>
               <Input
@@ -453,14 +457,14 @@ const GA4Setup = () => {
                 onChange={handleFileUpload}
               />
               {ga4Config.serviceAccountJson && (
-                <div style={{ marginTop: '5px', fontSize: '12px', color: '#10b981' }}>
+                <div className="mt-1 text-xs text-green-600 dark:text-green-400">
                   ✅ Service Account JSON loaded: {ga4Config.serviceAccountJson.client_email}
                 </div>
               )}
             </div>
           </div>
           
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className="flex justify-between items-center">
             <Button
               onClick={testGA4Connection}
               disabled={isConnecting || !ga4Config.propertyId || !ga4Config.serviceAccountJson}
@@ -474,32 +478,32 @@ const GA4Setup = () => {
               href="https://developers.google.com/analytics/devguides/reporting/data/v1/quickstart-client-libraries"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: '#3b82f6', textDecoration: 'none', fontSize: '12px' }}
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-xs"
             >
               📚 GA4 Setup Guide
             </a>
           </div>
           
           {ga4Config.error && (
-            <Card className="mt-3 bg-red-50 border-red-200">
-              <div className="text-red-600 text-sm">
+            <Card className="mt-3 bg-red-50 dark:bg-red-900 border-red-200 dark:border-red-700">
+              <div className="text-red-600 dark:text-red-300 text-sm">
                 ❌ {ga4Config.error}
               </div>
             </Card>
           )}
           
           {ga4Config.isAuthenticated && (
-            <Card className="mt-3 bg-green-50 border-green-200">
-              <div className="text-green-600 text-sm">
+            <Card className="mt-3 bg-green-50 dark:bg-green-900 border-green-200 dark:border-green-700">
+              <div className="text-green-600 dark:text-green-300 text-sm">
                 ✅ Connected successfully! Last sync: {new Date(ga4Config.lastFetch).toLocaleString()}
               </div>
             </Card>
           )}
           
-          <Card className="mt-4 bg-blue-50 border-blue-200">
-            <div className="text-blue-600 text-xs">
+          <Card className="mt-4 bg-blue-50 dark:bg-blue-900 border-blue-200 dark:border-blue-700">
+            <div className="text-blue-600 dark:text-blue-300 text-xs">
               <strong>Quick Setup:</strong><br />
-              1. Go to <a href="https://console.cloud.google.com/" target="_blank" className="text-blue-500 hover:text-blue-700">Google Cloud Console</a><br />
+              1. Go to <a href="https://console.cloud.google.com/" target="_blank" className="text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">Google Cloud Console</a><br />
               2. Enable Analytics Data API<br />
               3. Create API Key with Analytics permissions<br />
               4. Get your GA4 Property ID from Analytics settings
@@ -538,76 +542,30 @@ const RealtimeGA4 = ({ realtimeEvents, isRealtimeActive, setIsRealtimeActive }) 
   const displayEvents = realtimeEvents.slice(0, 8)
   
   return (
-    <div style={{ 
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', 
-      padding: '24px', 
-      borderRadius: '16px', 
-      border: 'none',
-      boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-      color: 'white',
-      position: 'relative',
-      overflow: 'hidden'
-    }}>
+    <div className="bg-gradient-to-br from-indigo-500 to-purple-600 dark:from-indigo-600 dark:to-purple-700 p-6 rounded-2xl shadow-xl text-white relative overflow-hidden">
       {/* Background Pattern */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        width: '100px',
-        height: '100px',
-        background: 'rgba(255,255,255,0.1)',
-        borderRadius: '50%',
-        transform: 'translate(30px, -30px)'
-      }}></div>
+      <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 dark:bg-white/5 rounded-full transform translate-x-8 -translate-y-8"></div>
       
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', position: 'relative', zIndex: 1 }}>
+      <div className="flex justify-between items-center mb-5 relative z-10">
         <div>
-          <h3 style={{ margin: '0 0 4px 0', color: 'white', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '18px', fontWeight: '600' }}>
-            <span style={{ 
-              display: 'inline-block',
-              width: '12px', 
-              height: '12px', 
-              background: isRealtimeActive ? '#ef4444' : '#94a3b8', 
-              borderRadius: '50%',
-              animation: isRealtimeActive ? 'pulse 2s infinite' : 'none'
-            }}></span>
+          <h3 className="m-0 mb-1 text-white flex items-center gap-2 text-lg font-semibold">
+            <span className={`inline-block w-3 h-3 rounded-full ${isRealtimeActive ? 'bg-red-500 animate-pulse' : 'bg-gray-400'}`}></span>
             Real-time Analytics
           </h3>
-          <p style={{ margin: 0, fontSize: '14px', color: 'rgba(255,255,255,0.8)' }}>
+          <p className="m-0 text-sm text-white/80">
             {isRealtimeActive ? 'Live data updating dashboard' : 'Activate to see live data'}
           </p>
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div className="flex items-center gap-3">
           {isRealtimeActive && totalEventsProcessed > 0 && (
-            <div style={{ 
-              background: 'rgba(255,255,255,0.2)', 
-              padding: '4px 12px', 
-              borderRadius: '20px',
-              fontSize: '12px',
-              fontWeight: '500'
-            }}>
+            <div className="bg-white/20 dark:bg-white/10 px-3 py-1 rounded-full text-xs font-medium">
               {totalEventsProcessed} events processed
             </div>
           )}
           <button
             onClick={() => setIsRealtimeActive(!isRealtimeActive)}
-            style={{
-              background: isRealtimeActive ? 'rgba(239, 68, 68, 0.9)' : 'rgba(16, 185, 129, 0.9)',
-              color: 'white',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: '500',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              transition: 'all 0.2s ease'
-            }}
-            onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
-            onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+            className={`${isRealtimeActive ? 'bg-red-500/90 hover:bg-red-500' : 'bg-green-500/90 hover:bg-green-500'} text-white border-0 px-4 py-2 rounded-lg cursor-pointer text-sm font-medium flex items-center gap-2 transition-all duration-200 hover:scale-105`}
           >
             {isRealtimeActive ? '⏸️ Stop Live' : '▶️ Start Live'}
           </button>
@@ -615,106 +573,43 @@ const RealtimeGA4 = ({ realtimeEvents, isRealtimeActive, setIsRealtimeActive }) 
       </div>
       
       {lastUpdate && isRealtimeActive && (
-        <div style={{ 
-          margin: '0 0 20px 0', 
-          fontSize: '12px', 
-          color: 'rgba(255,255,255,0.7)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px'
-        }}>
-          <span style={{ 
-            width: '6px', 
-            height: '6px', 
-            background: '#10b981', 
-            borderRadius: '50%' 
-          }}></span>
+        <div className="mb-5 text-xs text-white/70 flex items-center gap-2">
+          <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
           Last updated: {lastUpdate.toLocaleTimeString()} • Dashboard synced with live data
         </div>
       )}
       
       {displayEvents.length > 0 ? (
-        <div style={{ 
-          background: theme.colors.background.glass, 
-          borderRadius: theme.effects.borderRadius.large, 
-          padding: '16px',
-          backdropFilter: theme.effects.blur,
-          boxShadow: theme.effects.shadow
-        }}>
-          <div style={{ 
-            display: 'grid', 
-            gap: '12px', 
-            maxHeight: '240px', 
-            overflowY: 'auto',
-            paddingRight: '8px'
-          }}>
+        <div className="bg-white/10 dark:bg-gray-800/20 rounded-xl p-4 backdrop-blur-sm border border-white/10 dark:border-gray-700/20">
+          <div className="grid gap-3 max-h-60 overflow-y-auto pr-2">
             {displayEvents.map((event, i) => (
-              <div key={event.id} style={{
-                background: theme.colors.background.glass,
-                padding: '12px 16px',
-                borderRadius: '8px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                border: '1px solid rgba(255,255,255,0.1)',
-                transition: 'all 0.2s ease',
-                animation: i === 0 && isRealtimeActive ? 'slideIn 0.3s ease' : 'none'
-              }}>
+              <div key={event.id} className="bg-white/10 dark:bg-gray-800/30 p-3 rounded-lg flex justify-between items-center border border-white/10 dark:border-gray-700/20 transition-all duration-200 animate-in slide-in-from-top">
                 <div>
-                  <div style={{ 
-                    fontSize: '14px', 
-                    fontWeight: '500', 
-                    marginBottom: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px'
-                  }}>
-                    <span style={{
-                      background: event.event === 'page_view' ? '#3b82f6' : 
-                                 event.event === 'click' ? '#f59e0b' : 
-                                 event.event === 'purchase' ? '#10b981' : '#8b5cf6',
-                      color: 'white',
-                      padding: '2px 8px',
-                      borderRadius: '4px',
-                      fontSize: '11px',
-                      fontWeight: '600'
-                    }}>
+                  <div className="text-sm font-medium mb-1 flex items-center gap-2">
+                    <span className={`px-2 py-0.5 rounded text-white text-xs font-semibold ${
+                      event.event === 'page_view' ? 'bg-blue-500' : 
+                      event.event === 'click' ? 'bg-amber-500' : 
+                      event.event === 'purchase' ? 'bg-green-500' : 'bg-purple-500'
+                    }`}>
                       {event.event.replace('_', ' ').toUpperCase()}
                     </span>
-                    <span>{event.country}</span>
+                    <span className="text-white">{event.country}</span>
                     {event.id.startsWith('realtime_') && (
-                      <span style={{
-                        background: 'rgba(239, 68, 68, 0.8)',
-                        color: 'white',
-                        padding: '1px 6px',
-                        borderRadius: '10px',
-                        fontSize: '10px',
-                        fontWeight: '600'
-                      }}>
+                      <span className="bg-red-500/80 text-white px-1.5 py-0.5 rounded-full text-xs font-semibold">
                         LIVE
                       </span>
                     )}
                   </div>
-                  <div style={{ 
-                    fontSize: '12px', 
-                    color: 'rgba(255,255,255,0.7)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px'
-                  }}>
+                  <div className="text-xs text-white/70 flex items-center gap-2">
                     <span>📱 {event.device}</span>
                     {event.revenue > 0 && (
-                      <span style={{ color: '#10b981', fontWeight: '500' }}>
+                      <span className="text-green-400 font-medium">
                         💰 ${event.revenue}
                       </span>
                     )}
                   </div>
                 </div>
-                <div style={{ 
-                  fontSize: '12px', 
-                  color: 'rgba(255,255,255,0.6)',
-                  textAlign: 'right'
-                }}>
+                <div className="text-xs text-white/60 text-right">
                   {new Date(event.timestamp).toLocaleTimeString()}
                 </div>
               </div>
@@ -722,18 +617,11 @@ const RealtimeGA4 = ({ realtimeEvents, isRealtimeActive, setIsRealtimeActive }) 
           </div>
         </div>
       ) : (
-        <div style={{ 
-          background: theme.colors.background.glass, 
-          borderRadius: theme.effects.borderRadius.large, 
-          padding: '32px',
-          textAlign: 'center',
-          backdropFilter: theme.effects.blur,
-          boxShadow: theme.effects.shadow
-        }}>
-          <div style={{ fontSize: '48px', marginBottom: '12px', opacity: 0.5 }}>
+        <div className="bg-white/10 dark:bg-gray-800/20 rounded-xl p-8 text-center backdrop-blur-sm border border-white/10 dark:border-gray-700/20">
+          <div className="text-5xl mb-3 opacity-50">
             {isRealtimeActive ? '⏳' : '📊'}
           </div>
-          <p style={{ color: 'rgba(255,255,255,0.8)', margin: 0, fontSize: theme.typography.fontSize.sm }}>
+          <p className="text-white/80 m-0 text-sm">
             {isRealtimeActive ? 'Listening for real-time events...' : 'Click "Start Live" to see real-time analytics'}
           </p>
         </div>
@@ -780,11 +668,22 @@ const EventChart = ({ events }) => {
   
   return (
     <Card className="glass-card">
-      <h3 style={{ margin: '0 0 20px 0', color: '#333', fontSize: '18px', fontWeight: '600' }}>📈 Events & Revenue Trends (Last 14 Days)</h3>
+      <h3 className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-5 flex items-center gap-2">
+        📈 Events & Revenue Trends (Last 14 Days)
+      </h3>
       <svg width="100%" height="300" viewBox="0 0 800 300">
         {/* Grid lines */}
         {[0, 1, 2, 3, 4].map(i => (
-          <line key={i} x1="60" y1={60 + i * 48} x2="740" y2={60 + i * 48} stroke="#f0f0f0" strokeWidth="1" />
+          <line 
+            key={i} 
+            x1="60" 
+            y1={60 + i * 48} 
+            x2="740" 
+            y2={60 + i * 48} 
+            stroke="currentColor" 
+            strokeWidth="1" 
+            className="text-gray-200 dark:text-gray-700"
+          />
         ))}
         
         {/* Event bars */}
@@ -796,7 +695,7 @@ const EventChart = ({ events }) => {
           return (
             <g key={i}>
               <rect x={x} y={y} width="20" height={barHeight} fill="#3b82f6" opacity="0.7" />
-              <text x={x + 10} y="260" textAnchor="middle" fontSize="10" fill="#666">{d.date}</text>
+              <text x={x + 10} y="260" textAnchor="middle" fontSize="10" className="fill-gray-600 dark:fill-gray-400">{d.date}</text>
               <text x={x + 10} y={y - 5} textAnchor="middle" fontSize="10" fill="#3b82f6">{d.events}</text>
             </g>
           )
@@ -826,9 +725,9 @@ const EventChart = ({ events }) => {
         {/* Legend */}
         <g transform="translate(60, 20)">
           <rect x="0" y="0" width="15" height="15" fill="#3b82f6" opacity="0.7" />
-          <text x="20" y="12" fontSize="12" fill="#333">Events</text>
+          <text x="20" y="12" fontSize="12" className="fill-gray-900 dark:fill-gray-100">Events</text>
           <line x1="80" y1="7" x2="95" y2="7" stroke="#ef4444" strokeWidth="3" />
-          <text x="100" y="12" fontSize="12" fill="#333">Revenue</text>
+          <text x="100" y="12" fontSize="12" className="fill-gray-900 dark:fill-gray-100">Revenue</text>
         </g>
       </svg>
     </Card>
@@ -850,8 +749,10 @@ const DeviceChart = ({ events }) => {
   
   return (
     <Card className="glass-card">
-      <h3 style={{ margin: '0 0 20px 0', color: '#333', fontSize: '18px', fontWeight: '600' }}>📱 Device Breakdown</h3>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '30px' }}>
+      <h3 className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-5 flex items-center gap-2">
+        📱 Device Breakdown
+      </h3>
+      <div className="flex items-center gap-8">
         <svg width="200" height="200" viewBox="0 0 200 200">
           <g transform="translate(100, 100)">
             {devices.map(([device, count], i) => {
@@ -878,8 +779,9 @@ const DeviceChart = ({ events }) => {
                   key={device}
                   d={pathData}
                   fill={colors[i % colors.length]}
-                  stroke="#fff"
+                  stroke="currentColor"
                   strokeWidth="2"
+                  className="stroke-white dark:stroke-gray-800"
                 />
               )
               
@@ -888,11 +790,14 @@ const DeviceChart = ({ events }) => {
             })}
           </g>
         </svg>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div className="flex flex-col gap-3">
           {devices.map(([device, count], i) => (
-            <div key={device} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '15px', height: '15px', background: colors[i % colors.length] }}></div>
-              <span style={{ color: '#333', fontWeight: '500' }}>
+            <div key={device} className="flex items-center gap-3">
+              <div 
+                className="w-4 h-4 rounded-sm" 
+                style={{ backgroundColor: colors[i % colors.length] }}
+              ></div>
+              <span className="text-gray-900 dark:text-gray-100 font-medium">
                 {device}: {count.toLocaleString()} ({((count / total) * 100).toFixed(1)}%)
               </span>
             </div>
@@ -904,68 +809,52 @@ const DeviceChart = ({ events }) => {
 }
 
 // Country breakdown chart
-const CountryChart = ({ events }) => {
-  const countryCounts = events.reduce((acc, event) => {
+const CountryChart = ({ events }: { events: any[] }) => {
+  const countryCounts = events.reduce((acc: Record<string, number>, event: any) => {
     acc[event.country] = (acc[event.country] || 0) + 1
     return acc
   }, {})
   
   const total = events.length
   const countries = Object.entries(countryCounts)
-    .sort(([,a], [,b]) => b - a)
+    .sort(([,a], [,b]) => (b as number) - (a as number))
     .slice(0, 5) // Top 5 countries
   
   const colors = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6']
   
   return (
     <Card className="glass-card">
-      <h3 style={{ margin: '0 0 20px 0', color: '#333', fontSize: '18px', fontWeight: '600' }}>
+      <h3 className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-5 flex items-center gap-2">
         🌍 Top Countries
       </h3>
       
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div className="flex flex-col gap-3">
         {countries.map(([country, count], i) => {
-          const percentage = ((count / total) * 100).toFixed(1)
+          const percentage = (((count as number) / total) * 100).toFixed(1)
           
           return (
-            <div key={country} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{
-                width: '12px',
-                height: '12px',
-                backgroundColor: colors[i % colors.length],
-                borderRadius: '2px',
-                flexShrink: 0
-              }}></div>
+            <div key={country} className="flex items-center gap-3">
+              <div 
+                className="w-3 h-3 rounded-sm flex-shrink-0"
+                style={{ backgroundColor: colors[i % colors.length] }}
+              ></div>
               
-              <div style={{ flex: 1, fontSize: '14px', fontWeight: '500' }}>
+              <div className="flex-1 text-sm font-medium text-gray-900 dark:text-gray-100">
                 {country}
               </div>
               
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: '80px' }}>
-                <div style={{
-                  flex: 1,
-                  height: '8px',
-                  backgroundColor: '#f1f3f4',
-                  borderRadius: '4px',
-                  overflow: 'hidden',
-                  minWidth: '40px'
-                }}>
-                  <div style={{
-                    width: `${percentage}%`,
-                    height: '100%',
-                    backgroundColor: colors[i % colors.length],
-                    borderRadius: '4px',
-                    transition: 'width 0.3s ease'
-                  }}></div>
+              <div className="flex items-center gap-2 min-w-20">
+                <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden min-w-10">
+                  <div 
+                    className="h-full rounded-full transition-all duration-300"
+                    style={{
+                      width: `${percentage}%`,
+                      backgroundColor: colors[i % colors.length]
+                    }}
+                  ></div>
                 </div>
                 
-                <div style={{ 
-                  fontSize: '12px', 
-                  color: '#666',
-                  fontWeight: '600',
-                  minWidth: '35px',
-                  textAlign: 'right'
-                }}>
+                <div className="text-xs text-gray-600 dark:text-gray-400 font-semibold min-w-9 text-right">
                   {percentage}%
                 </div>
               </div>
@@ -975,7 +864,7 @@ const CountryChart = ({ events }) => {
       </div>
       
       {countries.length === 0 && (
-        <div style={{ textAlign: 'center', color: '#666', fontSize: '14px', padding: '20px' }}>
+        <div className="text-center text-gray-500 dark:text-gray-400 text-sm p-5">
           No data available
         </div>
       )}
@@ -985,7 +874,7 @@ const CountryChart = ({ events }) => {
 
 // Saved Views component
 const SavedViews = () => {
-  const { seed, filters, savedViews, addSavedView, loadSavedView } = useStore()
+  const { seed, filters, savedViews, addSavedView, loadSavedView } = useStore() as any
   const [viewName, setViewName] = React.useState('')
   const [showSaveForm, setShowSaveForm] = React.useState(false)
   
@@ -1004,8 +893,8 @@ const SavedViews = () => {
     }
   }
   
-  const getActiveFiltersCount = (filters) => {
-    return Object.entries(filters).filter(([key, value]) => {
+  const getActiveFiltersCount = (filters: any) => {
+    return Object.entries(filters).filter(([key, value]: [string, any]) => {
       if (key === 'showPurchasesOnly') return value === true
       if (key === 'dateRange') return value?.start || value?.end
       return value && value !== 'all'
@@ -1016,7 +905,7 @@ const SavedViews = () => {
     <Card className="glass-card">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-3">
-          <h3 className="text-gray-800 text-lg font-semibold m-0 flex items-center gap-2">
+          <h3 className="text-gray-800 dark:text-gray-100 text-lg font-semibold m-0 flex items-center gap-2">
             📁 Saved Views
           </h3>
           {savedViews.length > 0 && (
@@ -1032,9 +921,9 @@ const SavedViews = () => {
               type="text"
               placeholder="View name..."
               value={viewName}
-              onChange={(e) => setViewName(e.target.value)}
+              onChange={(e: any) => setViewName(e.target.value)}
               className="w-32 text-sm"
-              onKeyPress={(e) => e.key === 'Enter' && saveCurrentView()}
+              onKeyPress={(e: any) => e.key === 'Enter' && saveCurrentView()}
             />
           )}
           <Button
@@ -1060,44 +949,44 @@ const SavedViews = () => {
       {savedViews.length === 0 ? (
         <div className="text-center p-8">
           <div className="text-6xl mb-4 opacity-50">📊</div>
-          <p className="text-gray-600 mb-2 font-medium">No saved views yet</p>
-          <p className="text-gray-500 text-sm">Configure filters and data, then save your current view for quick access later!</p>
+          <p className="text-gray-600 dark:text-gray-300 mb-2 font-medium">No saved views yet</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">Configure filters and data, then save your current view for quick access later!</p>
         </div>
       ) : (
         <div className="space-y-3">
-          {savedViews.map((view) => (
+          {savedViews.map((view: any) => (
             <Card
               key={view.id}
-              className="bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 hover:from-blue-50 hover:to-indigo-50 hover:border-blue-200 transition-all duration-300"
+              className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-600 hover:from-blue-50 hover:to-indigo-50 dark:hover:from-blue-900 dark:hover:to-indigo-900 hover:border-blue-200 dark:hover:border-blue-600 transition-all duration-300"
               hover={true}
             >
               <div className="flex justify-between items-center">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="font-semibold text-gray-800">{view.name}</div>
+                    <div className="font-semibold text-gray-800 dark:text-gray-100">{view.name}</div>
                     {getActiveFiltersCount(view.filters) > 0 && (
                       <StatusBadge status="info" className="text-xs">
                         {getActiveFiltersCount(view.filters)} filters
                       </StatusBadge>
                     )}
                   </div>
-                  <div className="text-xs text-gray-600 space-y-1">
+                  <div className="text-xs text-gray-600 dark:text-gray-300 space-y-1">
                     <div className="flex items-center gap-4">
                       <span>🎲 Seed: {view.seed}</span>
                       <span>📅 {new Date(view.createdAt || Date.now()).toLocaleDateString()}</span>
                     </div>
                     <div className="flex flex-wrap gap-2 text-xs">
                       {view.filters.showPurchasesOnly && (
-                        <span className="bg-green-100 text-green-800 px-2 py-1 rounded">💰 Purchases</span>
+                        <span className="bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 px-2 py-1 rounded">💰 Purchases</span>
                       )}
                       {view.filters.selectedCountry && view.filters.selectedCountry !== 'all' && (
-                        <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">🌍 {view.filters.selectedCountry}</span>
+                        <span className="bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 px-2 py-1 rounded">🌍 {view.filters.selectedCountry}</span>
                       )}
                       {view.filters.selectedDevice && view.filters.selectedDevice !== 'all' && (
-                        <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded">📱 {view.filters.selectedDevice}</span>
+                        <span className="bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-100 px-2 py-1 rounded">📱 {view.filters.selectedDevice}</span>
                       )}
                       {view.filters.eventType && view.filters.eventType !== 'all' && (
-                        <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded">📊 {view.filters.eventType}</span>
+                        <span className="bg-orange-100 dark:bg-orange-800 text-orange-800 dark:text-orange-100 px-2 py-1 rounded">📊 {view.filters.eventType}</span>
                       )}
                     </div>
                   </div>
@@ -1120,20 +1009,20 @@ const SavedViews = () => {
 }
 
 // Advanced Filters component
-const AdvancedFilters = ({ events }) => {
-  const { filters, setFilters } = useStore()
+const AdvancedFilters = ({ events }: { events: any[] }) => {
+  const { filters, setFilters } = useStore() as any
   const [showAdvanced, setShowAdvanced] = React.useState(false)
   
-  const uniqueDevices = [...new Set(events.map(e => e.device))].sort()
-  const eventTypes = [...new Set(events.map(e => e.event))].sort()
+  const uniqueDevices = [...new Set(events.map((e: any) => e.device))].sort()
+  const eventTypes = [...new Set(events.map((e: any) => e.event))].sort()
   
-  const getDateString = (daysBack) => {
+  const getDateString = (daysBack: number) => {
     const date = new Date()
     date.setDate(date.getDate() - daysBack)
     return date.toISOString().split('T')[0]
   }
   
-  const setDateRange = (preset) => {
+  const setDateRange = (preset: string) => {
     const now = new Date()
     let start, end = now.toISOString().split('T')[0]
     
@@ -1169,12 +1058,12 @@ const AdvancedFilters = ({ events }) => {
     <Card className="glass-card">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-3">
-          <h3 className="text-gray-800 text-lg font-semibold m-0 flex items-center gap-2">
+          <h3 className="text-gray-800 dark:text-gray-100 text-lg font-semibold m-0 flex items-center gap-2">
             🎯 Advanced Filters
           </h3>
           {isFilterActive() && (
             <StatusBadge status="info" className="text-xs">
-              {Object.values(filters).filter(v => v && v !== 'all').length} active
+              {Object.values(filters).filter((v: any) => v && v !== 'all').length} active
             </StatusBadge>
           )}
         </div>
@@ -1191,16 +1080,16 @@ const AdvancedFilters = ({ events }) => {
       {/* Basic Filters */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
-          <label className="block mb-2 text-sm font-medium text-gray-700">
+          <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
             📊 Event Type
           </label>
           <Select
             value={filters.eventType || 'all'}
-            onChange={(e) => setFilters({ eventType: e.target.value === 'all' ? null : e.target.value })}
+            onChange={(e: any) => setFilters({ eventType: e.target.value === 'all' ? null : e.target.value })}
             className="w-full"
           >
             <option value="all">All Events</option>
-            {eventTypes.map(type => (
+            {eventTypes.map((type: string) => (
               <option key={type} value={type}>
                 {type.charAt(0).toUpperCase() + type.slice(1).replace('_', ' ')}
               </option>
@@ -1209,16 +1098,16 @@ const AdvancedFilters = ({ events }) => {
         </div>
         
         <div>
-          <label className="block mb-2 text-sm font-medium text-gray-700">
+          <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
             📱 Device Type
           </label>
           <Select
             value={filters.selectedDevice || 'all'}
-            onChange={(e) => setFilters({ selectedDevice: e.target.value === 'all' ? null : e.target.value })}
+            onChange={(e: any) => setFilters({ selectedDevice: e.target.value === 'all' ? null : e.target.value })}
             className="w-full"
           >
             <option value="all">All Devices</option>
-            {uniqueDevices.map(device => (
+            {uniqueDevices.map((device: string) => (
               <option key={device} value={device}>
                 {device.charAt(0).toUpperCase() + device.slice(1)}
               </option>
@@ -1229,9 +1118,9 @@ const AdvancedFilters = ({ events }) => {
       
       {/* Advanced Filters */}
       {showAdvanced && (
-        <div className="border-t border-gray-200 pt-4 mt-4 space-y-4">
+        <div className="border-t border-gray-200 dark:border-gray-600 pt-4 mt-4 space-y-4">
           <div>
-            <label className="block mb-3 text-sm font-medium text-gray-700">
+            <label className="block mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
               📅 Quick Date Ranges
             </label>
             <div className="flex flex-wrap gap-2">
@@ -1257,24 +1146,24 @@ const AdvancedFilters = ({ events }) => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700">
+              <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                 📆 Start Date
               </label>
               <Input
                 type="date"
                 value={filters.dateRange?.start || ''}
-                onChange={(e) => setFilters({ dateRange: { ...filters.dateRange, start: e.target.value } })}
+                onChange={(e: any) => setFilters({ dateRange: { ...filters.dateRange, start: e.target.value } })}
                 className="w-full"
               />
             </div>
             <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700">
+              <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                 📆 End Date
               </label>
               <Input
                 type="date"
                 value={filters.dateRange?.end || ''}
-                onChange={(e) => setFilters({ dateRange: { ...filters.dateRange, end: e.target.value } })}
+                onChange={(e: any) => setFilters({ dateRange: { ...filters.dateRange, end: e.target.value } })}
                 className="w-full"
               />
             </div>
@@ -1284,7 +1173,7 @@ const AdvancedFilters = ({ events }) => {
       
       {/* Clear Filters */}
       {isFilterActive() && (
-        <div className="mt-4 pt-4 border-t border-gray-200 text-right">
+        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600 text-right">
           <Button
             onClick={() => setFilters({ 
               showPurchasesOnly: false, 
@@ -1306,8 +1195,8 @@ const AdvancedFilters = ({ events }) => {
 }
 
 // Data Export & Analytics Tools
-const DataTools = ({ events, filteredEvents }) => {
-  const { exportData } = useStore()
+const DataTools = ({ events, filteredEvents }: { events: any[], filteredEvents: any[] }) => {
+  const { exportData } = useStore() as any
   const [showTools, setShowTools] = React.useState(false)
   
   const generateReport = () => {
@@ -1331,23 +1220,23 @@ const DataTools = ({ events, filteredEvents }) => {
     window.URL.revokeObjectURL(url)
   }
   
-  const getTopItems = (events, field) => {
-    const counts = events.reduce((acc, event) => {
+  const getTopItems = (events: any[], field: string) => {
+    const counts = events.reduce((acc: Record<string, number>, event: any) => {
       acc[event[field]] = (acc[event[field]] || 0) + 1
       return acc
     }, {})
     
     return Object.entries(counts)
-      .sort(([,a], [,b]) => b - a)
+      .sort(([,a], [,b]) => (b as number) - (a as number))
       .slice(0, 5)
-      .map(([name, count]) => ({ name, count, percentage: ((count / events.length) * 100).toFixed(1) }))
+      .map(([name, count]) => ({ name, count, percentage: (((count as number) / events.length) * 100).toFixed(1) }))
   }
   
   return (
     <Card className="glass-card">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-3">
-          <h3 className="text-gray-800 text-lg font-semibold m-0 flex items-center gap-2">
+          <h3 className="text-gray-800 dark:text-gray-100 text-lg font-semibold m-0 flex items-center gap-2">
             🛠️ Data Tools
           </h3>
           <StatusBadge status="neutral" className="text-xs">
@@ -1386,42 +1275,42 @@ const DataTools = ({ events, filteredEvents }) => {
       </div>
       
       {showTools && (
-        <div className="mt-6 p-4 bg-gray-50 bg-opacity-60 rounded-lg backdrop-blur-sm border border-gray-200">
-          <h4 className="text-gray-800 text-sm font-semibold mb-4 flex items-center gap-2">
+        <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 bg-opacity-60 dark:bg-opacity-60 rounded-lg backdrop-blur-sm border border-gray-200 dark:border-gray-600">
+          <h4 className="text-gray-800 dark:text-gray-100 text-sm font-semibold mb-4 flex items-center gap-2">
             💡 Quick Insights
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-            <div className="bg-white bg-opacity-70 p-3 rounded-lg">
-              <div className="text-gray-600 text-xs font-medium mb-1">DATA COVERAGE</div>
-              <div className="text-gray-900 font-semibold text-lg">
+            <div className="bg-white dark:bg-gray-700 bg-opacity-70 dark:bg-opacity-70 p-3 rounded-lg">
+              <div className="text-gray-600 dark:text-gray-300 text-xs font-medium mb-1">DATA COVERAGE</div>
+              <div className="text-gray-900 dark:text-gray-100 font-semibold text-lg">
                 {((filteredEvents.length / events.length) * 100).toFixed(1)}%
               </div>
-              <div className="text-gray-500 text-xs">of total data</div>
+              <div className="text-gray-500 dark:text-gray-400 text-xs">of total data</div>
             </div>
-            <div className="bg-white bg-opacity-70 p-3 rounded-lg">
-              <div className="text-gray-600 text-xs font-medium mb-1">TOP COUNTRY</div>
-              <div className="text-gray-900 font-semibold text-lg">
+            <div className="bg-white dark:bg-gray-700 bg-opacity-70 dark:bg-opacity-70 p-3 rounded-lg">
+              <div className="text-gray-600 dark:text-gray-300 text-xs font-medium mb-1">TOP COUNTRY</div>
+              <div className="text-gray-900 dark:text-gray-100 font-semibold text-lg">
                 {getTopItems(filteredEvents, 'country')[0]?.name || 'N/A'}
               </div>
-              <div className="text-gray-500 text-xs">
+              <div className="text-gray-500 dark:text-gray-400 text-xs">
                 {getTopItems(filteredEvents, 'country')[0]?.percentage || '0'}% of events
               </div>
             </div>
-            <div className="bg-white bg-opacity-70 p-3 rounded-lg">
-              <div className="text-gray-600 text-xs font-medium mb-1">TOP DEVICE</div>
-              <div className="text-gray-900 font-semibold text-lg">
+            <div className="bg-white dark:bg-gray-700 bg-opacity-70 dark:bg-opacity-70 p-3 rounded-lg">
+              <div className="text-gray-600 dark:text-gray-300 text-xs font-medium mb-1">TOP DEVICE</div>
+              <div className="text-gray-900 dark:text-gray-100 font-semibold text-lg">
                 {getTopItems(filteredEvents, 'device')[0]?.name || 'N/A'}
               </div>
-              <div className="text-gray-500 text-xs">
+              <div className="text-gray-500 dark:text-gray-400 text-xs">
                 {getTopItems(filteredEvents, 'device')[0]?.percentage || '0'}% of events
               </div>
             </div>
-            <div className="bg-white bg-opacity-70 p-3 rounded-lg">
-              <div className="text-gray-600 text-xs font-medium mb-1">TOP EVENT</div>
-              <div className="text-gray-900 font-semibold text-lg">
+            <div className="bg-white dark:bg-gray-700 bg-opacity-70 dark:bg-opacity-70 p-3 rounded-lg">
+              <div className="text-gray-600 dark:text-gray-300 text-xs font-medium mb-1">TOP EVENT</div>
+              <div className="text-gray-900 dark:text-gray-100 font-semibold text-lg">
                 {getTopItems(filteredEvents, 'event')[0]?.name?.replace('_', ' ') || 'N/A'}
               </div>
-              <div className="text-gray-500 text-xs">
+              <div className="text-gray-500 dark:text-gray-400 text-xs">
                 {getTopItems(filteredEvents, 'event')[0]?.percentage || '0'}% of events
               </div>
             </div>
@@ -1598,8 +1487,13 @@ export function Dashboard() {
             <div className="absolute -top-12 -right-12 w-48 h-48 bg-white bg-opacity-5 rounded-full"></div>
             <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-white bg-opacity-5 rounded-full"></div>
             
+            {/* Theme Toggle - positioned in top right */}
+            <div className="absolute top-4 right-4 z-20">
+              <ThemeToggle />
+            </div>
+            
             <div className="relative z-10">
-              <h1 className="text-white text-3xl mb-3 font-bold">
+              <h1 className="text-white dark:text-white text-3xl mb-3 font-bold">
                 📊 Product Analytics Dashboard
               </h1>
               <div className="flex flex-wrap gap-3 items-center mb-4">
@@ -1693,13 +1587,13 @@ export function Dashboard() {
       </section>
 
       {/* Charts and Real-time Section */}
-      <section style={{ marginBottom: '24px' }}>
+      <section className="mb-6">
         {dataSource === 'ga4' && ga4Config.isAuthenticated ? (
           /* GA4 Layout with Real-time */
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px', marginBottom: '20px' }}>
-            <div style={{ display: 'grid', gridTemplateRows: '1fr 1fr', gap: '16px' }}>
+          <div className="grid grid-cols-3 gap-5 mb-5">
+            <div className="col-span-2 grid grid-rows-2 gap-4">
               <EventChart events={events} />
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div className="grid grid-cols-2 gap-4">
                 <DeviceChart events={events} />
                 <CountryChart events={events} />
               </div>
@@ -1712,26 +1606,28 @@ export function Dashboard() {
           </div>
         ) : (
           /* Standard Layout */
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '16px' }}>
-            <EventChart events={events} />
+          <div className="grid grid-cols-3 gap-4">
+            <div className="col-span-2">
+              <EventChart events={events} />
+            </div>
             <DeviceChart events={events} />
           </div>
         )}
       </section>
 
       {/* Saved Views */}
-      <section style={{ marginBottom: '24px' }}>
+      <section className="mb-6">
         <SavedViews />
       </section>
 
       {/* GA4 Setup */}
-      <section style={{ marginBottom: '24px' }}>
+      <section className="mb-6">
         <GA4Setup />
       </section>
 
       {/* Loading Indicator for GA4 */}
       {isLoadingGA4 && (
-        <section style={{ marginBottom: '24px' }}>
+        <section className="mb-6">
           <Card className="text-center py-12">
             <LoadingSpinner size="large" className="mx-auto mb-4" />
             <p className="text-gray-600 text-lg font-medium">Loading GA4 data...</p>
@@ -1741,27 +1637,22 @@ export function Dashboard() {
       )}
 
       {/* Advanced Filters */}
-      <section style={{ marginBottom: '24px' }}>
+      <section className="mb-6">
         <AdvancedFilters events={allEvents} />
       </section>
 
       {/* Data Tools */}
-      <section style={{ marginBottom: '24px' }}>
+      <section className="mb-6">
         <DataTools events={allEvents} filteredEvents={events} />
       </section>
 
       {/* Data Table */}
       <section>
-        <h2 style={{ fontSize: '20px', margin: '0 0 16px 0', fontWeight: '600' }}>
+        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
           📋 Event Data ({events.length.toLocaleString()} events)
         </h2>
-        <div style={{
-          border: '1px solid #dee2e6',
-          borderRadius: '8px',
-          backgroundColor: '#ffffff',
-          overflow: 'hidden'
-        }}>
-          <EventTable events={events.slice(0, 20)} />
+        <div className="border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 overflow-hidden">
+          <EventsTable events={events.slice(0, 20)} />
         </div>
       </section>
         </div>
@@ -1826,73 +1717,4 @@ function KpiCard({ label, value, change, positive }) {
   )
 }
 
-function EventTable({ events }) {
-  return (
-    <div>
-      {/* Table Header */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '120px 100px 100px 120px 100px 80px',
-        gap: '12px',
-        padding: '12px 16px',
-        backgroundColor: '#f8f9fa',
-        borderBottom: '1px solid #dee2e6',
-        fontSize: '12px',
-        fontWeight: '600',
-        textTransform: 'uppercase',
-        color: '#6c757d'
-      }}>
-        <div>Event Type</div>
-        <div>User ID</div>
-        <div>Device</div>
-        <div>Country</div>
-        <div>Time</div>
-        <div>Revenue</div>
-      </div>
-      
-      {/* Table Rows */}
-      {events.map((event, i) => (
-        <div key={i} style={{
-          display: 'grid',
-          gridTemplateColumns: '120px 100px 100px 120px 100px 80px',
-          gap: '12px',
-          padding: '12px 16px',
-          borderBottom: i < events.length - 1 ? '1px solid #f1f3f4' : 'none',
-          fontSize: '14px',
-          backgroundColor: event.event === 'purchase' ? '#f8fff8' : 'transparent'
-        }}>
-          <div style={{
-            fontWeight: event.event === 'purchase' ? '600' : 'normal',
-            color: event.event === 'purchase' ? '#28a745' : '#000000'
-          }}>
-            {event.event === 'purchase' && '💰'} {event.event.replace('_', ' ')}
-          </div>
-          <div style={{ color: '#6c757d', fontSize: '12px' }}>
-            {event.userId.split('_')[1]}
-          </div>
-          <div>{event.device}</div>
-          <div>{event.country}</div>
-          <div style={{ fontSize: '12px', color: '#6c757d' }}>
-            {new Date(event.timestamp).toLocaleDateString()}
-          </div>
-          <div style={{ 
-            fontWeight: event.revenue > 0 ? '600' : 'normal',
-            color: event.revenue > 0 ? '#28a745' : '#6c757d'
-          }}>
-            {event.revenue > 0 ? `$${event.revenue}` : '—'}
-          </div>
-        </div>
-      ))}
-      
-      <div style={{
-        padding: '16px',
-        textAlign: 'center',
-        fontSize: '14px',
-        color: '#6c757d',
-        backgroundColor: '#f8f9fa'
-      }}>
-        Showing first 20 of {events.length.toLocaleString()} events
-      </div>
-    </div>
-  )
-}
+export default Dashboard

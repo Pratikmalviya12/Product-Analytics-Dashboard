@@ -1,0 +1,88 @@
+import React, { createContext, useContext, useState, useEffect } from 'react'
+
+type ThemeMode = 'light' | 'dark'
+type DarkThemeVariant = 'slate' | 'blue' | 'emerald' | 'purple' | 'rose' | 'orange' | 'cyber'
+
+interface ThemeContextType {
+  mode: ThemeMode
+  darkThemeVariant: DarkThemeVariant
+  toggleTheme: () => void
+  setTheme: (mode: ThemeMode) => void
+  setDarkThemeVariant: (variant: DarkThemeVariant) => void
+}
+
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
+
+export const useTheme = () => {
+  const context = useContext(ThemeContext)
+  if (context === undefined) {
+    throw new Error('useTheme must be used within a ThemeProvider')
+  }
+  return context
+}
+
+export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [mode, setMode] = useState<ThemeMode>(() => {
+    // Check localStorage for saved theme preference
+    const savedTheme = localStorage.getItem('theme-mode')
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      return savedTheme
+    }
+    
+    // Check system preference
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark'
+    }
+    
+    return 'light'
+  })
+
+  const [darkThemeVariant, setDarkThemeVariant] = useState<DarkThemeVariant>(() => {
+    const savedVariant = localStorage.getItem('dark-theme-variant')
+    if (savedVariant && ['slate', 'blue', 'emerald', 'purple', 'rose', 'orange', 'cyber'].includes(savedVariant)) {
+      return savedVariant as DarkThemeVariant
+    }
+    return 'slate'
+  })
+
+  // Update localStorage when theme changes
+  useEffect(() => {
+    localStorage.setItem('theme-mode', mode)
+  }, [mode])
+
+  // Update localStorage when dark theme variant changes
+  useEffect(() => {
+    localStorage.setItem('dark-theme-variant', darkThemeVariant)
+  }, [darkThemeVariant])
+
+  // Apply theme class to document
+  useEffect(() => {
+    if (mode === 'dark') {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }, [mode])
+
+  const toggleTheme = () => {
+    setMode(prevMode => prevMode === 'light' ? 'dark' : 'light')
+  }
+
+  const setTheme = (newMode: ThemeMode) => {
+    setMode(newMode)
+  }
+
+  const contextValue: ThemeContextType = {
+    mode,
+    darkThemeVariant,
+    toggleTheme,
+    setTheme,
+    setDarkThemeVariant
+  }
+
+  return (
+    <ThemeContext.Provider value={contextValue}>
+      {children}
+    </ThemeContext.Provider>
+  )
+}

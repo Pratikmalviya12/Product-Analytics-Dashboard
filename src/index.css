@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Theme-aware CSS variables */
+:root {
+  --tooltip-bg: rgba(255, 255, 255, 0.95);
+  --tooltip-border: #ccc;
+  --tooltip-text: #333;
+  --chart-grid: #f0f0f0;
+  --chart-text: #666;
+}
+
+.dark {
+  --tooltip-bg: rgba(31, 41, 55, 0.95);
+  --tooltip-border: #6B7280;
+  --tooltip-text: #F9FAFB;
+  --chart-grid: #4B5563;
+  --chart-text: #9CA3AF;
+}
+
 /* Enhanced theme-consistent custom utilities */
 
 /* Glass morphism effect utilities */
@@ -9,8 +26,16 @@
   @apply bg-white bg-opacity-10 backdrop-blur-lg border border-white border-opacity-20;
 }
 
+.dark .glass {
+  @apply bg-gray-800 bg-opacity-10 border-gray-700 border-opacity-30;
+}
+
 .glass-hover {
   @apply hover:bg-white hover:bg-opacity-15;
+}
+
+.dark .glass-hover {
+  @apply hover:bg-gray-800 hover:bg-opacity-20;
 }
 
 .glass-card {
@@ -40,8 +65,16 @@
   @apply bg-white bg-opacity-5 rounded;
 }
 
+.dark ::-webkit-scrollbar-track {
+  @apply bg-gray-800 bg-opacity-20 rounded;
+}
+
 ::-webkit-scrollbar-thumb {
   @apply bg-white bg-opacity-30 rounded hover:bg-opacity-50;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  @apply bg-gray-600 bg-opacity-50 rounded hover:bg-opacity-70;
 }
 
 /* Focus styles for accessibility */

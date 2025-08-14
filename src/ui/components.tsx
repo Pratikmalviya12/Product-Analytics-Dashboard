@@ -14,12 +14,13 @@ export const Button = ({
   const baseClasses = "inline-flex items-center justify-center font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:transform hover:-translate-y-0.5"
   
   const variants = {
-    primary: "bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white focus:ring-indigo-500 shadow-lg",
-    success: "bg-green-500 hover:bg-green-600 text-white focus:ring-green-500 shadow-lg",
-    warning: "bg-yellow-500 hover:bg-yellow-600 text-white focus:ring-yellow-500 shadow-lg",
-    error: "bg-red-500 hover:bg-red-600 text-white focus:ring-red-500 shadow-lg",
-    secondary: "bg-white bg-opacity-90 hover:bg-opacity-100 text-gray-700 border border-white border-opacity-30 focus:ring-indigo-500 shadow-lg backdrop-blur-md",
-    ghost: "bg-white bg-opacity-10 hover:bg-opacity-20 text-white border border-white border-opacity-20 backdrop-blur-md"
+    primary: "bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white focus:ring-indigo-500 shadow-lg dark:from-indigo-600 dark:to-purple-700 dark:hover:from-indigo-700 dark:hover:to-purple-800",
+    success: "bg-green-500 hover:bg-green-600 text-white focus:ring-green-500 shadow-lg dark:bg-green-600 dark:hover:bg-green-700",
+    warning: "bg-yellow-500 hover:bg-yellow-600 text-white focus:ring-yellow-500 shadow-lg dark:bg-yellow-600 dark:hover:bg-yellow-700",
+    error: "bg-red-500 hover:bg-red-600 text-white focus:ring-red-500 shadow-lg dark:bg-red-600 dark:hover:bg-red-700",
+    secondary: "bg-white bg-opacity-90 hover:bg-opacity-100 text-gray-700 border border-white border-opacity-30 focus:ring-indigo-500 shadow-lg backdrop-blur-md dark:bg-gray-800 dark:bg-opacity-90 dark:text-gray-200 dark:border-gray-600 dark:border-opacity-30",
+    ghost: "bg-white bg-opacity-10 hover:bg-opacity-20 text-white border border-white border-opacity-20 backdrop-blur-md dark:bg-gray-800 dark:bg-opacity-10 dark:hover:bg-opacity-20 dark:border-gray-600 dark:border-opacity-20",
+    outline: "bg-transparent border-2 border-white border-opacity-30 text-white hover:bg-white hover:bg-opacity-10 focus:ring-indigo-500 dark:border-gray-600 dark:border-opacity-30 dark:hover:bg-gray-800 dark:hover:bg-opacity-10"
   }
 
   const sizes = {
@@ -46,7 +47,7 @@ export const Card = ({ children, className = '', hover = true, ...props }) => {
   
   return (
     <div
-      className={`glass rounded-xl p-6 shadow-lg border border-white border-opacity-20 backdrop-blur-lg transition-all duration-300 ${hoverClass} ${className}`}
+      className={`glass rounded-xl p-6 shadow-lg border border-white border-opacity-20 backdrop-blur-lg transition-all duration-300 dark:border-gray-700 dark:border-opacity-30 dark:bg-gray-800 dark:bg-opacity-10 ${hoverClass} ${className}`}
       {...props}
     >
       {children}

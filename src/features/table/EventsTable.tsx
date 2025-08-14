@@ -91,16 +91,16 @@ export function EventsTable({ events }: EventsTableProps) {
   })
 
   return (
-    <div style={{ border: '1px solid var(--divider, #ccc)', borderRadius: 8, overflow: 'hidden' }}>
-      <div style={{ padding: 16, borderBottom: '1px solid var(--divider, #ccc)', background: '#fafafa' }}>
-        <h3 style={{ margin: 0, fontSize: 14, fontWeight: 600 }}>
+    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-800">
+      <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+        <h3 className="m-0 text-sm font-semibold text-gray-900 dark:text-gray-100">
           Events ({events.length.toLocaleString()})
         </h3>
       </div>
       
-      <div style={{ overflow: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead style={{ position: 'sticky', top: 0, background: 'white', zIndex: 1 }}>
+      <div className="overflow-auto">
+        <table className="w-full border-collapse">
+          <thead className="sticky top-0 bg-white dark:bg-gray-800 z-10">
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
@@ -108,17 +108,11 @@ export function EventsTable({ events }: EventsTableProps) {
                     key={header.id}
                     style={{
                       width: header.getSize(),
-                      padding: '8px 12px',
-                      textAlign: 'left',
-                      fontSize: 12,
-                      fontWeight: 600,
-                      borderBottom: '1px solid var(--divider, #ccc)',
-                      cursor: header.column.getCanSort() ? 'pointer' : 'default',
-                      userSelect: 'none',
                     }}
+                    className="px-3 py-2 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 cursor-pointer select-none hover:bg-gray-50 dark:hover:bg-gray-700"
                     onClick={header.column.getToggleSortingHandler()}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <div className="flex items-center gap-1">
                       {flexRender(header.column.columnDef.header, header.getContext())}
                       {{
                         asc: ' ↑',
@@ -134,10 +128,7 @@ export function EventsTable({ events }: EventsTableProps) {
         
         <div
           ref={parentRef}
-          style={{
-            height: '400px',
-            overflow: 'auto',
-          }}
+          className="h-96 overflow-auto"
         >
           <div
             style={{
@@ -146,7 +137,7 @@ export function EventsTable({ events }: EventsTableProps) {
               position: 'relative',
             }}
           >
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <table className="w-full border-collapse">
               <tbody>
                 {virtualizer.getVirtualItems().map(virtualRow => {
                   const row = rows[virtualRow.index]
@@ -161,16 +152,15 @@ export function EventsTable({ events }: EventsTableProps) {
                         height: `${virtualRow.size}px`,
                         transform: `translateY(${virtualRow.start}px)`,
                       }}
+                      className="hover:bg-gray-50 dark:hover:bg-gray-700"
                     >
                       {row.getVisibleCells().map(cell => (
                         <td
                           key={cell.id}
                           style={{
                             width: cell.column.getSize(),
-                            padding: '8px 12px',
-                            fontSize: 12,
-                            borderBottom: '1px solid #f0f0f0',
                           }}
+                          className="px-3 py-2 text-xs text-gray-900 dark:text-gray-100 border-b border-gray-100 dark:border-gray-700"
                         >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
