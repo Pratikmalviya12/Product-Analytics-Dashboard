@@ -4,6 +4,8 @@ import { theme } from '../lib/theme'
 import { Button, Card, StatusBadge, Input, LoadingSpinner, Select } from './components'
 import { ThemeToggle } from './ThemeToggle'
 import { EventsTable } from '../features/table/EventsTable'
+import { trackDashboardEvents } from '../services/analytics'
+import { CookieConsent } from '../components/privacy/CookieConsent'
 
 // Enhanced Zustand store with GA4 integration
 const useStore = create((set, get) => ({
@@ -412,14 +414,24 @@ const GA4Setup = () => {
         </label>
         <div className="flex gap-3">
           <Button
-            onClick={() => setDataSource('simulated')}
+            onClick={() => {
+              setDataSource('simulated');
+              trackDashboardEvents.dataSourceChanged('simulated');
+            }}
             variant={dataSource === 'simulated' ? 'primary' : 'secondary'}
             size="medium"
           >
             📊 Simulated Data (50K events)
           </Button>
           <Button
-            onClick={() => ga4Config.isAuthenticated ? setDataSource('ga4') : setShowSetup(true)}
+            onClick={() => {
+              if (ga4Config.isAuthenticated) {
+                setDataSource('ga4');
+                trackDashboardEvents.dataSourceChanged('ga4');
+              } else {
+                setShowSetup(true);
+              }
+            }}
             disabled={!ga4Config.isAuthenticated && dataSource !== 'ga4'}
             variant={dataSource === 'ga4' ? 'success' : 'secondary'}
             size="medium"
@@ -1351,6 +1363,11 @@ export function Dashboard() {
   const [realtimeEvents, setRealtimeEvents] = React.useState([])
   const [isRealtimeActive, setIsRealtimeActive] = React.useState(false)
   
+  // Track initial dashboard view
+  React.useEffect(() => {
+    trackDashboardEvents.dataSourceChanged(dataSource);
+  }, []); // Only track on mount
+  
   // Fetch GA4 data when needed
   React.useEffect(() => {
     if (dataSource === 'ga4' && ga4Config.isAuthenticated) {
@@ -1657,6 +1674,13 @@ export function Dashboard() {
       </section>
         </div>
       </div>
+      
+      {/* Privacy & Analytics */}
+      <CookieConsent onConsentGiven={(consented) => {
+        if (consented) {
+          trackDashboardEvents.dataSourceChanged(dataSource);
+        }
+      }} />
     </main>
   )
 }

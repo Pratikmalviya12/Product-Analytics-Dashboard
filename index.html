@@ -4,6 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Product Analytics Dashboard</title>
+    
+    <!-- Google tag (gtag.js) - GA4 Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RK2P8TWPN2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RK2P8TWPN2', {
+        // Enable enhanced measurement for automatic event tracking
+        send_page_view: true,
+        // Privacy settings
+        anonymize_ip: true,
+        allow_google_signals: false
+      });
+    </script>
+    
     <style>
       html, body, #root { height: 100%; margin: 0; }
       body { color-scheme: light dark; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
