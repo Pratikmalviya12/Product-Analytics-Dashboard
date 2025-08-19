@@ -42,14 +42,8 @@ export const CURRENCY_SYMBOL = '$'
 export const CURRENCY_LOCALE = 'en-US'
 export const DATE_FORMAT = 'MMM dd, HH:mm:ss'
 
-// Theme variant constants
-export const DARK_THEME_VARIANTS = ['slate', 'blue', 'emerald', 'purple', 'rose', 'orange', 'cyber'] as const
-export type DarkThemeVariant = typeof DARK_THEME_VARIANTS[number]
-
 // LocalStorage keys
 export const THEME_MODE_STORAGE_KEY = 'theme-mode'
-export const DARK_THEME_VARIANT_STORAGE_KEY = 'dark-theme-variant'
-export const DEFAULT_DARK_THEME_VARIANT = 'slate'
 
 // System theme detection
 export const DARK_MODE_MEDIA_QUERY = '(prefers-color-scheme: dark)'

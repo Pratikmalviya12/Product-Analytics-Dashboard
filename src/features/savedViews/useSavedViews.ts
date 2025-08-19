@@ -19,7 +19,7 @@ type SavedViewsState = {
 
 export const useSavedViews = create<SavedViewsState>()(
   persist(
-    (set, get) => ({
+    (set, _get) => ({
       views: [],
       addView: (name, filters, seed) => {
         const view: SavedView = {

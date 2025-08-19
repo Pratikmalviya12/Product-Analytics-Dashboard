@@ -1,6 +1,44 @@
 import React from 'react'
 import { Card } from '../../components'
 
+/**
+ * KPI Card Component
+ * 
+ * @description A visually appealing card component for displaying Key Performance Indicators (KPIs)
+ * with gradient backgrounds, icons, and change indicators. Each KPI type has its own color scheme
+ * and corresponding emoji icon.
+ * 
+ * @param {Object} props - Component properties
+ * @param {string} props.label - The KPI label/name (e.g., "Total Users", "Revenue")
+ * @param {string|number} props.value - The current KPI value to display
+ * @param {string} props.change - The change percentage from previous period (e.g., "+12.3%")
+ * @param {boolean} props.positive - Whether the change is positive (affects color and arrow direction)
+ * 
+ * @features
+ * - Unique gradient backgrounds for each KPI type
+ * - Contextual emoji icons based on KPI label
+ * - Positive/negative change indicators with arrows
+ * - Hover animations with scale effects
+ * - Responsive text sizing and spacing
+ * - Dark/light theme support
+ * - Decorative background elements
+ * 
+ * @kpiTypes
+ * - Total Users: Purple gradient with 👥 icon
+ * - Sessions: Pink gradient with 📱 icon  
+ * - Conversion Rate: Blue gradient with 📈 icon
+ * - Revenue: Green gradient with 💰 icon
+ * 
+ * @example
+ * ```tsx
+ * <KpiCard 
+ *   label="Total Users" 
+ *   value="1,234" 
+ *   change="+12.3%" 
+ *   positive={true} 
+ * />
+ * ```
+ */
 export function KpiCard({ label, value, change, positive }: { label: string; value: string | number; change: string; positive: boolean }) {
   const getIconForLabel = (label: string) => {
     switch (label) {

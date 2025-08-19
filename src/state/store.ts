@@ -4,8 +4,8 @@ export type Filters = {
   dateFrom: number | null
   dateTo: number | null
   country?: string[]
-  device?: string[]
-  event?: string[]
+  device?: ('mobile' | 'desktop' | 'tablet')[]
+  event?: ('page_view' | 'click' | 'signup' | 'purchase')[]
 }
 
 export type Event = {

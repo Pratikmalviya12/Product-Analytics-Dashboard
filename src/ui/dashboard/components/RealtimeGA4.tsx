@@ -2,6 +2,47 @@ import React from 'react'
 import { useDashboardStore } from '../store'
 import { Card } from '../../components'
 
+/**
+ * Realtime GA4 Component
+ * 
+ * @description A live data visualization component that displays real-time Google Analytics 4 events
+ * with streaming updates, event processing stats, and interactive controls for managing live data flow.
+ * 
+ * @param {Object} props - Component properties
+ * @param {any[]} props.realtimeEvents - Array of real-time events from GA4 Realtime API
+ * @param {boolean} props.isRealtimeActive - Whether real-time streaming is currently active
+ * @param {Function} props.setIsRealtimeActive - Function to toggle real-time streaming on/off
+ * 
+ * @features
+ * - Live event streaming with real-time updates
+ * - Event processing counter and statistics
+ * - Visual status indicators (pulsing dot, status text)
+ * - Toggle controls for starting/stopping live updates
+ * - Recent events list with timestamps
+ * - Gradient background with decorative elements
+ * - Last update timestamp tracking
+ * - Event count limiting for performance
+ * 
+ * @stateManagement
+ * - Tracks last update timestamp automatically
+ * - Maintains total processed events counter
+ * - Resets counters when streaming stops
+ * - Integrates with dashboard store for GA4 config
+ * 
+ * @conditionalRendering
+ * - Only shows when GA4 is configured and authenticated
+ * - Adapts display based on streaming status
+ * - Shows different UI states for active/inactive modes
+ * 
+ * @example
+ * ```tsx
+ * <RealtimeGA4 
+ *   realtimeEvents={liveEvents}
+ *   isRealtimeActive={isStreaming}
+ *   setIsRealtimeActive={setStreaming}
+ * />
+ * ```
+ */
 export const RealtimeGA4 = ({ realtimeEvents, isRealtimeActive, setIsRealtimeActive }: { realtimeEvents: any[]; isRealtimeActive: boolean; setIsRealtimeActive: (v: boolean) => void }) => {
   const { dataSource, ga4Config } = useDashboardStore()
   const [lastUpdate, setLastUpdate] = React.useState<Date | null>(null)

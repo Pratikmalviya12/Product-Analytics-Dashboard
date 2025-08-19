@@ -12,6 +12,41 @@ import {
   CHART_BASE_Y
 } from '../../../constants'
 
+/**
+ * Event Chart Component
+ * 
+ * @description A comprehensive bar chart visualization showing daily event counts and revenue trends
+ * over a configurable time period. Features dual-axis display with events and revenue correlation.
+ * 
+ * @param {Object} props - Component properties
+ * @param {any[]} props.events - Array of event objects with timestamp, event type, and revenue data
+ * 
+ * @features
+ * - Daily aggregation of events and revenue data
+ * - Dual-axis visualization (events count + revenue)
+ * - Interactive SVG-based bar chart
+ * - Responsive design with configurable dimensions
+ * - Grid lines for better data reading
+ * - Purchase events highlighting
+ * - Revenue correlation visualization
+ * - Dynamic scaling based on data range
+ * 
+ * @dataProcessing
+ * - Groups events by day over the specified period
+ * - Calculates daily event counts and purchase volumes
+ * - Aggregates revenue per day for purchase events
+ * - Normalizes data for optimal chart scaling
+ * 
+ * @constants
+ * - Uses predefined chart dimensions and spacing
+ * - Configurable time period (default: CHART_DAYS_DEFAULT)
+ * - Responsive SVG viewBox for mobile compatibility
+ * 
+ * @example
+ * ```tsx
+ * <EventChart events={filteredEvents} />
+ * ```
+ */
 export const EventChart = ({ events }: { events: any[] }) => {
   const days = CHART_DAYS_DEFAULT
   const now = Date.now()

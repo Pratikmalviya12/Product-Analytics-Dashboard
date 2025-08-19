@@ -121,7 +121,7 @@ export const fetchGA4Data = async (propertyId: string, serviceAccountJson: any, 
     }
 
     // Simulate authentication
-    const accessToken = await getAccessToken(serviceAccountJson)
+    await getAccessToken(serviceAccountJson)
     console.log('✅ Mock authentication successful')
     
     // Simulate API delay

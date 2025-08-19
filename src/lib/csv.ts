@@ -2,14 +2,14 @@ import Papa from 'papaparse'
 import { Event } from '@/lib/types'
 
 export function exportToCSV(events: Event[], filename = 'events.csv') {
-  const csv = Papa.unparse(events, {
-    header: true,
-    transform: (value, field) => {
-      if (field === 'timestamp') {
-        return new Date(value as number).toISOString()
-      }
-      return value
-    }
+  // Transform timestamp to readable format
+  const transformedEvents = events.map(event => ({
+    ...event,
+    timestamp: new Date(event.timestamp).toISOString()
+  }))
+  
+  const csv = Papa.unparse(transformedEvents, {
+    header: true
   })
   
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })

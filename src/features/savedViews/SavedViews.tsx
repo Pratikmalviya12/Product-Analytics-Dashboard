@@ -4,7 +4,7 @@ import { useUI } from '@/state/store'
 import { format } from 'date-fns'
 
 export function SavedViews() {
-  const { views, addView, removeView, loadView } = useSavedViews()
+  const { views, addView, loadView } = useSavedViews()
   const { filters, seed, setFilters, setSeed } = useUI()
   const [showModal, setShowModal] = React.useState(false)
   const [viewName, setViewName] = React.useState('')

@@ -46,7 +46,7 @@ interface StoreState {
   exportData: (events: any[]) => void
 }
 
-export const useDashboardStore = create<StoreState>((set, get) => ({
+export const useDashboardStore = create<StoreState>((set, _get) => ({
   seed: 42,
   setSeed: (n) => set({ seed: n }),
   dataSource: 'simulated',

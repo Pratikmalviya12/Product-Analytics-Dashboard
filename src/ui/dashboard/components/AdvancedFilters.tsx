@@ -2,6 +2,48 @@ import React from 'react'
 import { Button, Card, Input, Select, StatusBadge } from '../../components'
 import { useDashboardStore } from '../store'
 
+/**
+ * Advanced Filters Component
+ * 
+ * @description A comprehensive filtering interface providing multiple filter types including
+ * date ranges, device types, event types, and preset date selections for detailed data analysis.
+ * 
+ * @param {Object} props - Component properties
+ * @param {any[]} props.events - Array of events used to populate filter options dynamically
+ * 
+ * @features
+ * - Collapsible advanced filters interface
+ * - Date range filtering with presets (today, week, month, quarter)
+ * - Device type filtering with dynamic options
+ * - Event type filtering based on available data
+ * - Active filter indicators and badges
+ * - Clear all filters functionality
+ * - Filter state persistence
+ * - Real-time filter validation
+ * 
+ * @filterTypes
+ * - Date Range: Custom start/end dates or predefined presets
+ * - Device Type: Mobile, Desktop, Tablet filtering
+ * - Event Type: Page view, Click, Purchase, etc.
+ * - Custom date inputs for precise range selection
+ * 
+ * @datePresets
+ * - Today: Current day only
+ * - Week: Last 7 days
+ * - Month: Last 30 days  
+ * - Quarter: Last 90 days
+ * 
+ * @stateManagement
+ * - Integrates with useDashboardStore for filter persistence
+ * - Dynamic filter options based on available data
+ * - Real-time filter status tracking
+ * - Automatic filter application
+ * 
+ * @example
+ * ```tsx
+ * <AdvancedFilters events={dashboardEvents} />
+ * ```
+ */
 export const AdvancedFilters = ({ events }: { events: any[] }) => {
   const { filters, setFilters } = useDashboardStore() as any
   const [showAdvanced, setShowAdvanced] = React.useState(false)

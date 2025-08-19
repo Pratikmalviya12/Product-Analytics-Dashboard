@@ -1,6 +1,41 @@
 import React from 'react'
 import { Card } from '../../components'
 
+/**
+ * Device Chart Component
+ * 
+ * @description A pie chart visualization displaying the distribution of user devices (mobile, desktop, tablet)
+ * with interactive legends and percentage breakdowns. Uses SVG for crisp rendering at any scale.
+ * 
+ * @param {Object} props - Component properties
+ * @param {any[]} props.events - Array of event objects containing device information
+ * 
+ * @features
+ * - Interactive pie chart with device distribution
+ * - Color-coded segments with semantic colors
+ * - Percentage calculations and display
+ * - Device-specific emoji icons in legend
+ * - Responsive SVG implementation
+ * - Dark/light theme support
+ * - Clean segment borders and styling
+ * 
+ * @dataProcessing
+ * - Aggregates events by device type
+ * - Calculates percentage distribution
+ * - Handles angular positioning for pie segments
+ * - Supports dynamic device types
+ * 
+ * @visualization
+ * - Blue (#3b82f6): Primary device type
+ * - Red (#ef4444): Secondary device type  
+ * - Green (#10b981): Tertiary device type
+ * - Automatic legend with percentages
+ * 
+ * @example
+ * ```tsx
+ * <DeviceChart events={userEvents} />
+ * ```
+ */
 export const DeviceChart = ({ events }: { events: any[] }) => {
   const deviceCounts = events.reduce((acc: Record<string, number>, event: any) => {
     acc[event.device] = (acc[event.device] || 0) + 1

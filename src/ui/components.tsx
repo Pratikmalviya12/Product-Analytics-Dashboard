@@ -1,5 +1,20 @@
 import React from 'react'
-import { theme } from '../lib/theme'
+
+/**
+ * UI Components Library
+ * 
+ * @description A comprehensive set of reusable UI components for the Product Analytics Dashboard.
+ * All components are designed with TypeScript support, accessibility features, and theming capabilities.
+ * Includes buttons, cards, form inputs, status badges, and loading indicators.
+ * 
+ * @features
+ * - Full TypeScript support with proper interface definitions
+ * - Dark/light theme compatibility
+ * - Responsive design principles
+ * - Accessibility (ARIA) support
+ * - Consistent styling with Tailwind CSS
+ * - Multiple variants and sizes for flexibility
+ */
 
 // Type definitions
 type ButtonVariant = 'primary' | 'success' | 'warning' | 'error' | 'secondary' | 'ghost' | 'outline'
@@ -8,46 +23,93 @@ type StatusBadgeStatus = 'success' | 'warning' | 'error' | 'info' | 'neutral'
 type BadgeVariant = 'primary' | 'success' | 'warning' | 'error' | 'secondary'
 type SpinnerSize = 'small' | 'medium' | 'large'
 
-interface ButtonProps {
+/**
+ * Button Component Props
+ * @interface ButtonProps
+ * @extends React.ButtonHTMLAttributes without className override
+ * @property {ButtonVariant} variant - Visual style variant of the button
+ * @property {ButtonSize} size - Size of the button (affects padding and font size)
+ * @property {React.ReactNode} children - Button content (text, icons, etc.)
+ * @property {string} className - Additional CSS classes for customization
+ */
+interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className'> {
   variant?: ButtonVariant
   size?: ButtonSize
   children: React.ReactNode
-  disabled?: boolean
-  onClick?: React.MouseEventHandler<HTMLButtonElement>
   className?: string
-  [key: string]: any
 }
 
-interface CardProps {
+/**
+ * Card Component Props
+ * @interface CardProps
+ * @extends React.HTMLAttributes without className override
+ * @property {React.ReactNode} children - Card content
+ * @property {string} className - Additional CSS classes
+ * @property {boolean} hover - Enable hover effects and interactions
+ */
+interface CardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'className'> {
   children: React.ReactNode
   className?: string
   hover?: boolean
-  [key: string]: any
 }
 
+/**
+ * Status Badge Component Props
+ * @interface StatusBadgeProps
+ * @property {StatusBadgeStatus} status - Visual status indicator (success, warning, error, info, neutral)
+ * @property {React.ReactNode} children - Badge content (usually text)
+ * @property {string} className - Additional CSS classes for customization
+ */
 interface StatusBadgeProps {
   status: StatusBadgeStatus
   children: React.ReactNode
   className?: string
 }
 
+/**
+ * Input Component Props
+ * @interface InputProps
+ * @extends React.InputHTMLAttributes without className override
+ * @property {string} className - Additional CSS classes
+ * @property {boolean} error - Apply error styling to indicate validation errors
+ */
 interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'className'> {
   className?: string
   error?: boolean
 }
 
+/**
+ * Select Component Props
+ * @interface SelectProps
+ * @extends React.SelectHTMLAttributes without className override
+ * @property {React.ReactNode} children - Select options and content
+ * @property {string} className - Additional CSS classes
+ */
 interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'className'> {
   children: React.ReactNode
   className?: string
 }
 
-interface BadgeProps {
+/**
+ * Badge Component Props
+ * @interface BadgeProps
+ * @extends React.HTMLAttributes without className override
+ * @property {BadgeVariant} variant - Visual style variant
+ * @property {React.ReactNode} children - Badge content
+ * @property {string} className - Additional CSS classes
+ */
+interface BadgeProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'className'> {
   variant?: BadgeVariant
   children: React.ReactNode
   className?: string
-  [key: string]: any
 }
 
+/**
+ * Loading Spinner Component Props
+ * @interface LoadingSpinnerProps
+ * @property {SpinnerSize} size - Size of the spinner (small, medium, large)
+ * @property {string} className - Additional CSS classes
+ */
 interface LoadingSpinnerProps {
   size?: SpinnerSize
   className?: string
@@ -64,7 +126,36 @@ interface ProgressBarProps {
   [key: string]: any
 }
 
-// Shared button component with consistent theming
+/**
+ * Button Component
+ * 
+ * @description A versatile button component with multiple variants, sizes, and comprehensive theming support.
+ * Features gradient backgrounds, smooth animations, and accessibility compliance.
+ * 
+ * @param {ButtonProps} props - Component properties
+ * @param {ButtonVariant} variant - Visual style (primary, success, warning, error, secondary, ghost, outline)
+ * @param {ButtonSize} size - Button size (small, medium, large)
+ * @param {React.ReactNode} children - Button content (text, icons, etc.)
+ * @param {boolean} disabled - Disable button interactions
+ * @param {Function} onClick - Click event handler
+ * @param {string} className - Additional CSS classes
+ * 
+ * @features
+ * - 7 distinct visual variants with gradient styling
+ * - 3 size options with responsive design
+ * - Dark/light theme support
+ * - Hover animations and focus states
+ * - Disabled state handling
+ * - Full accessibility support
+ * - TypeScript integration
+ * 
+ * @example
+ * ```tsx
+ * <Button variant="success" size="large" onClick={handleClick}>
+ *   Save Changes
+ * </Button>
+ * ```
+ */
 export const Button = ({ 
   variant = 'primary', 
   size = 'medium',
@@ -104,7 +195,33 @@ export const Button = ({
   )
 }
 
-// Shared card component with optimized performance
+/**
+ * Card Component
+ * 
+ * @description A flexible container component that provides consistent styling for content sections.
+ * Features responsive design, hover effects, and dark theme support.
+ * 
+ * @param {CardProps} props - Component properties
+ * @param {React.ReactNode} children - Card content
+ * @param {string} className - Additional CSS classes for customization
+ * @param {boolean} hover - Enable hover animations and shadow effects
+ * 
+ * @features
+ * - Consistent border radius and shadow styling
+ * - Optional hover animations with lift effect
+ * - Dark/light theme compatibility
+ * - Responsive padding and spacing
+ * - Glass-morphism styling in dark mode
+ * - Smooth transitions and animations
+ * 
+ * @example
+ * ```tsx
+ * <Card hover={true} className="mb-4">
+ *   <h3>Chart Title</h3>
+ *   <ChartComponent data={data} />
+ * </Card>
+ * ```
+ */
 export const Card = ({ children, className = '', hover = true, ...props }: CardProps) => {
   const hoverClass = hover ? "hover:shadow-xl transform transition-transform transition-shadow duration-200 hover:-translate-y-1" : ""
   
@@ -118,7 +235,31 @@ export const Card = ({ children, className = '', hover = true, ...props }: CardP
   )
 }
 
-// Status badge component
+/**
+ * Status Badge Component
+ * 
+ * @description A small indicator component for displaying status information with color-coded styling.
+ * Provides visual feedback for different states (success, warning, error, info, neutral).
+ * 
+ * @param {StatusBadgeProps} props - Component properties
+ * @param {StatusBadgeStatus} status - Badge status type affecting color scheme
+ * @param {React.ReactNode} children - Badge content (typically short text)
+ * @param {string} className - Additional CSS classes for customization
+ * 
+ * @features
+ * - 5 distinct status types with semantic colors
+ * - Dark/light theme support
+ * - Consistent padding and typography
+ * - Border styling for better definition
+ * - Accessible color contrast ratios
+ * 
+ * @example
+ * ```tsx
+ * <StatusBadge status="success">Active</StatusBadge>
+ * <StatusBadge status="warning">Pending</StatusBadge>
+ * <StatusBadge status="error">Failed</StatusBadge>
+ * ```
+ */
 export const StatusBadge = ({ status, children, className = '' }: StatusBadgeProps) => {
   const statusClasses = {
     success: "bg-green-100 text-green-800 border border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-700",
@@ -135,7 +276,34 @@ export const StatusBadge = ({ status, children, className = '' }: StatusBadgePro
   )
 }
 
-// Input component with consistent styling
+/**
+ * Input Component
+ * 
+ * @description A styled input field component with error state handling and consistent theming.
+ * Supports all standard HTML input attributes with enhanced visual design.
+ * 
+ * @param {InputProps} props - Component properties
+ * @param {string} className - Additional CSS classes for customization
+ * @param {boolean} error - Apply error styling for validation feedback
+ * 
+ * @features
+ * - Error state with red border and focus ring
+ * - Dark/light theme support
+ * - Smooth focus transitions
+ * - Consistent padding and rounded corners
+ * - Shadow effects for depth
+ * - Full keyboard accessibility
+ * 
+ * @example
+ * ```tsx
+ * <Input 
+ *   type="email" 
+ *   placeholder="Enter your email"
+ *   error={hasValidationError}
+ *   onChange={handleChange}
+ * />
+ * ```
+ */
 export const Input = ({ className = '', error = false, ...props }: InputProps) => {
   const errorClass = error ? "border-red-500 focus:border-red-500 focus:ring-red-200" : "border-gray-300 focus:border-indigo-500 focus:ring-indigo-200 dark:border-gray-600 dark:focus:border-indigo-400"
   
@@ -147,7 +315,28 @@ export const Input = ({ className = '', error = false, ...props }: InputProps) =
   )
 }
 
-// Loading spinner component
+/**
+ * Loading Spinner Component
+ * 
+ * @description An animated loading indicator with configurable sizes and smooth rotation animation.
+ * Perfect for indicating loading states in forms, data fetching, or async operations.
+ * 
+ * @param {LoadingSpinnerProps} props - Component properties
+ * @param {SpinnerSize} size - Spinner size (small: 16px, medium: 24px, large: 32px)
+ * @param {string} className - Additional CSS classes for positioning and styling
+ * 
+ * @features
+ * - 3 size variants for different use cases
+ * - Smooth 360-degree rotation animation
+ * - Accessible with proper ARIA attributes
+ * - Dark/light theme compatible colors
+ * - Lightweight SVG-based implementation
+ * 
+ * @example
+ * ```tsx
+ * <LoadingSpinner size="large" className="mx-auto" />
+ * ```
+ */
 export const LoadingSpinner = ({ size = 'medium', className = '' }: LoadingSpinnerProps) => {
   const sizes = {
     small: "w-4 h-4",
@@ -160,7 +349,33 @@ export const LoadingSpinner = ({ size = 'medium', className = '' }: LoadingSpinn
   )
 }
 
-// Shared select component
+/**
+ * Select Component
+ * 
+ * @description A styled dropdown select component with consistent theming and smooth interactions.
+ * Supports all standard HTML select attributes with enhanced visual design.
+ * 
+ * @param {SelectProps} props - Component properties
+ * @param {React.ReactNode} children - Select options (option elements)
+ * @param {string} className - Additional CSS classes for customization
+ * 
+ * @features
+ * - Consistent styling with other form components
+ * - Hover and focus state animations
+ * - Dark/light theme support
+ * - Smooth border and shadow transitions
+ * - Proper cursor styling
+ * - Full keyboard accessibility
+ * 
+ * @example
+ * ```tsx
+ * <Select value={selectedValue} onChange={handleChange}>
+ *   <option value="">Select an option</option>
+ *   <option value="option1">Option 1</option>
+ *   <option value="option2">Option 2</option>
+ * </Select>
+ * ```
+ */
 export const Select = ({ children, className = '', ...props }: SelectProps) => {
   return (
     <select
@@ -172,7 +387,31 @@ export const Select = ({ children, className = '', ...props }: SelectProps) => {
   )
 }
 
-// Badge component for status indicators
+/**
+ * Badge Component
+ * 
+ * @description A small label component for displaying short pieces of information with color coding.
+ * Ideal for tags, labels, counts, or status indicators.
+ * 
+ * @param {BadgeProps} props - Component properties
+ * @param {BadgeVariant} variant - Visual style variant (primary, success, warning, error, secondary)
+ * @param {React.ReactNode} children - Badge content (text, numbers, etc.)
+ * @param {string} className - Additional CSS classes for customization
+ * 
+ * @features
+ * - 5 semantic color variants
+ * - Compact, rounded design
+ * - Consistent typography and spacing
+ * - High contrast for readability
+ * - Flexible content support
+ * 
+ * @example
+ * ```tsx
+ * <Badge variant="success">New</Badge>
+ * <Badge variant="warning">Beta</Badge>
+ * <Badge variant="error">{errorCount}</Badge>
+ * ```
+ */
 export const Badge = ({ variant = 'primary', children, className = '', ...props }: BadgeProps) => {
   const variants = {
     primary: 'bg-blue-500 text-white',
@@ -192,7 +431,28 @@ export const Badge = ({ variant = 'primary', children, className = '', ...props 
   )
 }
 
-// Loading spinner component
+/**
+ * Spinner Component
+ * 
+ * @description A simple, customizable loading spinner with configurable size.
+ * Lightweight alternative to LoadingSpinner for simpler use cases.
+ * 
+ * @param {SpinnerProps} props - Component properties
+ * @param {number} size - Spinner size in pixels (default: 20)
+ * @param {string} className - Additional CSS classes for styling
+ * 
+ * @features
+ * - Customizable size via inline styles
+ * - Simple circular animation
+ * - Minimal design footprint
+ * - Blue accent color
+ * - Smooth rotation animation
+ * 
+ * @example
+ * ```tsx
+ * <Spinner size={24} className="mx-2" />
+ * ```
+ */
 export const Spinner = ({ size = 20, className = '' }: SpinnerProps) => {
   return (
     <div
@@ -202,7 +462,29 @@ export const Spinner = ({ size = 20, className = '' }: SpinnerProps) => {
   )
 }
 
-// Progress bar component
+/**
+ * Progress Bar Component
+ * 
+ * @description A visual progress indicator showing completion percentage with smooth animations.
+ * Perfect for file uploads, form completion, loading states, or any measurable progress.
+ * 
+ * @param {ProgressBarProps} props - Component properties
+ * @param {number} progress - Progress percentage (0-100, automatically clamped)
+ * @param {string} className - Additional CSS classes for customization
+ * 
+ * @features
+ * - Smooth animated progress transitions
+ * - Automatic value clamping (0-100%)
+ * - Responsive width scaling
+ * - Blue accent color with gray background
+ * - Rounded corners for modern appearance
+ * 
+ * @example
+ * ```tsx
+ * <ProgressBar progress={75} className="mb-4" />
+ * <ProgressBar progress={uploadProgress} />
+ * ```
+ */
 export const ProgressBar = ({ progress = 0, className = '', ...props }: ProgressBarProps) => {
   return (
     <div

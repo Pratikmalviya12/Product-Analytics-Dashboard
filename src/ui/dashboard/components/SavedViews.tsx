@@ -2,6 +2,46 @@ import React from 'react'
 import { Button, Card, Input, StatusBadge } from '../../components'
 import { useDashboardStore } from '../store'
 
+/**
+ * Saved Views Component
+ * 
+ * @description A view management system that allows users to save and restore dashboard configurations
+ * including filters, seed values, and data source settings for quick access to common analytics views.
+ * 
+ * @features
+ * - Save current dashboard state as named views
+ * - Quick restore of saved configurations
+ * - View management with creation timestamps
+ * - Active filters counting and display
+ * - Inline view name editing
+ * - Delete functionality for view cleanup
+ * - Empty state with helpful messaging
+ * - Responsive grid layout for view cards
+ * 
+ * @stateManagement
+ * - Integrates with useDashboardStore for persistence
+ * - Tracks current filters and seed values
+ * - Manages saved view collection
+ * - Handles view creation and deletion
+ * 
+ * @viewContents
+ * Each saved view includes:
+ * - Dashboard seed value for data reproducibility
+ * - All active filter configurations
+ * - View name and creation timestamp
+ * - Active filters count for quick identification
+ * 
+ * @userExperience
+ * - Inline form for quick view naming
+ * - Visual indicators for view status
+ * - Quick load/restore functionality
+ * - Confirmation flows for destructive actions
+ * 
+ * @example
+ * ```tsx
+ * <SavedViews />
+ * ```
+ */
 export const SavedViews = () => {
   const { seed, filters, savedViews, addSavedView, loadSavedView } = useDashboardStore() as any
   const [viewName, setViewName] = React.useState('')

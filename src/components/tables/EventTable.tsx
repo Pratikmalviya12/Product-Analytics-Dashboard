@@ -1,9 +1,12 @@
-import React from 'react'
-import { useTheme } from '../../lib/ThemeContext'
-import { Card } from '../components'
+interface Event {
+  [key: string]: any
+}
 
-export const EventTable = ({ events }) => {
-  const { theme } = useTheme()
+interface EventTableProps {
+  events: Event[]
+}
+
+export const EventTable = ({ events }: EventTableProps) => {
   
   // Safety check for events array
   if (!events || !Array.isArray(events) || events.length === 0) {

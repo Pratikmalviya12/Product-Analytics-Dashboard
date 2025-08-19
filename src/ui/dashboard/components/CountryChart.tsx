@@ -1,6 +1,42 @@
 import React from 'react'
 import { Card } from '../../components'
 
+/**
+ * Country Chart Component
+ * 
+ * @description A horizontal bar chart showing the top 5 countries by user activity with
+ * color-coded indicators, percentage breakdowns, and animated progress bars.
+ * 
+ * @param {Object} props - Component properties
+ * @param {any[]} props.events - Array of event objects containing country information
+ * 
+ * @features
+ * - Top 5 countries ranked by activity volume
+ * - Horizontal progress bars with percentage indicators
+ * - Color-coded entries for visual distinction
+ * - Responsive design with flexible layout
+ * - Empty state handling for no data scenarios
+ * - Smooth animations on data updates
+ * - Dark/light theme support
+ * 
+ * @dataProcessing
+ * - Aggregates events by country
+ * - Sorts countries by activity count (descending)
+ * - Limits display to top 5 performers
+ * - Calculates percentage distribution
+ * - Handles edge cases (no data, single country)
+ * 
+ * @visualization
+ * - Color palette: Blue, Red, Green, Amber, Purple
+ * - Progress bars show relative activity levels
+ * - Percentage values aligned to the right
+ * - Consistent spacing and typography
+ * 
+ * @example
+ * ```tsx
+ * <CountryChart events={geoEvents} />
+ * ```
+ */
 export const CountryChart = ({ events }: { events: any[] }) => {
   const countryCounts = events.reduce((acc: Record<string, number>, event: any) => {
     acc[event.country] = (acc[event.country] || 0) + 1

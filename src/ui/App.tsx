@@ -8,7 +8,7 @@ import { ThemeProvider, useTheme } from '../lib/ThemeContext'
 export { theme }
 
 const AppContent = () => {
-  const { mode, darkThemeVariant } = useTheme()
+  const { mode } = useTheme()
 
   // Apply dark class to document root when in dark mode
   React.useEffect(() => {
@@ -20,28 +20,9 @@ const AppContent = () => {
   }, [mode])
 
   const getBackgroundClass = () => {
-    if (mode === 'light') {
-      return 'bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-700'
-    }
-    
-    switch (darkThemeVariant) {
-      case 'slate':
-        return 'bg-gradient-dark-slate'
-      case 'blue':
-        return 'bg-gradient-dark-blue'
-      case 'emerald':
-        return 'bg-gradient-dark-emerald'
-      case 'purple':
-        return 'bg-gradient-dark-purple'
-      case 'rose':
-        return 'bg-gradient-dark-rose'
-      case 'orange':
-        return 'bg-gradient-dark-orange'
-      case 'cyber':
-        return 'bg-gradient-dark-cyber'
-      default:
-        return 'bg-gradient-dark-slate'
-    }
+    return mode === 'light' 
+      ? 'bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-700'
+      : 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'
   }
 
   return (

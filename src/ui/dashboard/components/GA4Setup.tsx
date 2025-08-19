@@ -3,6 +3,45 @@ import { Button, Card, Input, StatusBadge } from '../../components'
 import { useDashboardStore } from '../store'
 import { fetchGA4Data } from '../ga4'
 
+/**
+ * GA4 Setup Component
+ * 
+ * @description A comprehensive setup interface for Google Analytics 4 integration, handling
+ * authentication, configuration, and connection testing with real-time feedback.
+ * 
+ * @features
+ * - Service Account JSON file upload and validation
+ * - GA4 Property ID configuration  
+ * - Connection testing with error handling
+ * - Data source switching (simulated vs GA4)
+ * - Status indicators and feedback messages
+ * - Collapsible setup interface
+ * - Authentication state management
+ * - Error display and troubleshooting
+ * 
+ * @stateManagement
+ * - Uses useDashboardStore for global state
+ * - Manages connection status and errors
+ * - Handles authentication flow
+ * - Stores configuration persistently
+ * 
+ * @fileHandling
+ * - JSON validation for service account files
+ * - FileReader API for secure file processing
+ * - Error handling for invalid file formats
+ * - Real-time file content validation
+ * 
+ * @connectionTesting
+ * - Async GA4 API testing
+ * - 7-day sample data fetch for validation
+ * - Comprehensive error reporting
+ * - Success/failure status updates
+ * 
+ * @example
+ * ```tsx
+ * <GA4Setup />
+ * ```
+ */
 export const GA4Setup = () => {
   const { dataSource, setDataSource, ga4Config, setGA4Config } = useDashboardStore()
   const [isConnecting, setIsConnecting] = React.useState(false)
@@ -16,7 +55,7 @@ export const GA4Setup = () => {
         try {
           const serviceAccountJson = JSON.parse(String(e.target?.result))
           setGA4Config({ serviceAccountJson, error: null })
-        } catch (error) {
+        } catch {
           setGA4Config({ error: 'Invalid JSON file format' })
         }
       }

@@ -93,8 +93,8 @@ export const theme = {
 }
 
 // Utility function to get theme values
-export const getThemeValue = (path: string) => {
-  return path.split('.').reduce((obj, key) => obj?.[key], theme)
+export const getThemeValue = (path: string): any => {
+  return path.split('.').reduce((obj: any, key: string) => obj?.[key], theme)
 }
 
 // Common component class combinations
