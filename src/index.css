@@ -120,3 +120,79 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+/* AG Grid theme overrides */
+.ag-custom-ag {
+  /* sizing */
+  --ag-grid-size: 6px;
+  --ag-font-size: 12px;
+  --ag-header-height: 36px;
+  --ag-row-height: 40px;
+  --ag-cell-horizontal-padding: 12px;
+
+  /* borders & separators */
+  --ag-row-border-style: solid;
+  --ag-row-border-width: 1px;
+  --ag-header-column-separator: block;
+  --ag-header-column-separator-height: 18px;
+  --ag-header-column-separator-width: 1px;
+
+  /* colors - light */
+  --ag-background-color: #ffffff;
+  --ag-foreground-color: #111827; /* gray-900 */
+  --ag-border-color: #e5e7eb; /* gray-200 */
+  --ag-header-background-color: #f8fafc; /* slate-50 */
+  --ag-header-foreground-color: #1f2937; /* gray-800 */
+  --ag-odd-row-background-color: #f9fafb; /* gray-50 */
+  --ag-row-hover-color: #eef2ff; /* indigo-50 */
+  --ag-selected-row-background-color: #e0e7ff; /* indigo-100 */
+  --ag-input-focus-border-color: #6366f1; /* indigo-500 */
+  --ag-checkbox-checked-color: #10b981; /* emerald-500 */
+}
+
+.dark .ag-custom-ag {
+  /* colors - dark */
+  --ag-background-color: #0f172a; /* slate-900 */
+  --ag-foreground-color: #e5e7eb; /* gray-200 */
+  --ag-border-color: #374151; /* gray-700 */
+  --ag-header-background-color: #111827; /* gray-900 */
+  --ag-header-foreground-color: #f3f4f6; /* gray-100 */
+  --ag-odd-row-background-color: #0b1220; /* darker */
+  --ag-row-hover-color: #1f2937; /* gray-800 */
+  --ag-selected-row-background-color: #1f2937; /* gray-800 */
+}
+
+/* Strong AG Grid overrides to ensure visible styling */
+.ag-custom-ag .ag-header, 
+.ag-custom-ag .ag-header-viewport, 
+.ag-custom-ag .ag-header-container {
+  background-color: var(--ag-header-background-color) !important;
+}
+
+.ag-custom-ag .ag-root-wrapper {
+  border: 1px solid var(--ag-border-color) !important;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Zebra rows with explicit colors */
+.ag-custom-ag .ag-row-odd .ag-cell {
+  background-color: rgba(17, 24, 39, 0.03) !important; /* light zebra */
+}
+.dark .ag-custom-ag .ag-row-odd .ag-cell {
+  background-color: rgba(255, 255, 255, 0.05) !important; /* dark zebra */
+}
+
+/* Hover effect */
+.ag-custom-ag .ag-row-hover .ag-cell {
+  background-color: rgba(99, 102, 241, 0.12) !important; /* indigo */
+}
+
+/* Header text weight */
+.ag-custom-ag .ag-header-cell-label { font-weight: 700 !important; }
+
+/* Compact cell padding */
+.ag-custom-ag .ag-cell { padding: 0 12px !important; }
+
+/* Pagination bar */
+.ag-custom-ag .ag-paging-panel { background-color: var(--ag-background-color) !important; }

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Dashboard } from './Dashboard'
+import { ErrorBoundary } from './ErrorBoundary'
 import { theme } from '../lib/theme'
 import { ThemeProvider, useTheme } from '../lib/ThemeContext'
 
@@ -49,14 +50,14 @@ const AppContent = () => {
       aria-label="Product Analytics Dashboard"
       className={`min-h-screen ${getBackgroundClass()} font-sans transition-all duration-500`}
     >
-      <Dashboard />
+      <ErrorBoundary>
+        <Dashboard />
+      </ErrorBoundary>
     </div>
   )
 }
 
 export function App() {
-  console.log('App component rendering...')
-  
   return (
     <ThemeProvider>
       <AppContent />
