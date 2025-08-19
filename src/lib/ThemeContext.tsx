@@ -1,7 +1,14 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { 
+  DARK_THEME_VARIANTS, 
+  DarkThemeVariant,
+  THEME_MODE_STORAGE_KEY,
+  DARK_THEME_VARIANT_STORAGE_KEY,
+  DEFAULT_DARK_THEME_VARIANT,
+  DARK_MODE_MEDIA_QUERY
+} from '../constants/ui'
 
 type ThemeMode = 'light' | 'dark'
-type DarkThemeVariant = 'slate' | 'blue' | 'emerald' | 'purple' | 'rose' | 'orange' | 'cyber'
 
 interface ThemeContextType {
   mode: ThemeMode
@@ -30,7 +37,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
     
     // Check system preference
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    if (window.matchMedia && window.matchMedia(DARK_MODE_MEDIA_QUERY).matches) {
       return 'dark'
     }
     
@@ -38,21 +45,21 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   })
 
   const [darkThemeVariant, setDarkThemeVariant] = useState<DarkThemeVariant>(() => {
-    const savedVariant = localStorage.getItem('dark-theme-variant')
-    if (savedVariant && ['slate', 'blue', 'emerald', 'purple', 'rose', 'orange', 'cyber'].includes(savedVariant)) {
+    const savedVariant = localStorage.getItem(DARK_THEME_VARIANT_STORAGE_KEY)
+    if (savedVariant && DARK_THEME_VARIANTS.includes(savedVariant as DarkThemeVariant)) {
       return savedVariant as DarkThemeVariant
     }
-    return 'slate'
+    return DEFAULT_DARK_THEME_VARIANT
   })
 
   // Update localStorage when theme changes
   useEffect(() => {
-    localStorage.setItem('theme-mode', mode)
+    localStorage.setItem(THEME_MODE_STORAGE_KEY, mode)
   }, [mode])
 
   // Update localStorage when dark theme variant changes
   useEffect(() => {
-    localStorage.setItem('dark-theme-variant', darkThemeVariant)
+    localStorage.setItem(DARK_THEME_VARIANT_STORAGE_KEY, darkThemeVariant)
   }, [darkThemeVariant])
 
   // Apply theme class to document

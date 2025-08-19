@@ -1,10 +1,21 @@
 import React from 'react'
 import { Card } from '../../components'
+import {
+  CHART_DAYS_DEFAULT,
+  MS_PER_DAY,
+  CHART_SVG_WIDTH,
+  CHART_SVG_HEIGHT,
+  CHART_MARGIN_LEFT,
+  CHART_BAR_WIDTH,
+  CHART_BAR_SPACING,
+  CHART_MAX_HEIGHT,
+  CHART_BASE_Y
+} from '../../../constants'
 
 export const EventChart = ({ events }: { events: any[] }) => {
-  const days = 14
+  const days = CHART_DAYS_DEFAULT
   const now = Date.now()
-  const msPerDay = 24 * 60 * 60 * 1000
+  const msPerDay = MS_PER_DAY
 
   const dailyData: any[] = []
   for (let i = days - 1; i >= 0; i--) {
@@ -27,16 +38,16 @@ export const EventChart = ({ events }: { events: any[] }) => {
   return (
     <Card className="glass-card">
       <h3 className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-5 flex items-center gap-2">
-        📈 Events & Revenue Trends (Last 14 Days)
+        📈 Events & Revenue Trends
       </h3>
-      <svg width="100%" height="300" viewBox="0 0 800 300">
+      <svg width="100%" height={CHART_SVG_HEIGHT} viewBox={`0 0 ${CHART_SVG_WIDTH} ${CHART_SVG_HEIGHT}`}>
         {[0, 1, 2, 3, 4].map((i) => (
           <line
             key={i}
-            x1="60"
-            y1={60 + i * 48}
+            x1={CHART_MARGIN_LEFT}
+            y1={60 + i * CHART_BAR_WIDTH}
             x2="740"
-            y2={60 + i * 48}
+            y2={60 + i * CHART_BAR_WIDTH}
             stroke="currentColor"
             strokeWidth="1"
             className="text-gray-200 dark:text-gray-700"
@@ -44,9 +55,9 @@ export const EventChart = ({ events }: { events: any[] }) => {
         ))}
 
         {dailyData.map((d, i) => {
-          const x = 60 + i * 48 + 5
-          const barHeight = (d.events / maxEvents) * 180
-          const y = 240 - barHeight
+          const x = CHART_MARGIN_LEFT + i * CHART_BAR_WIDTH + CHART_BAR_SPACING
+          const barHeight = (d.events / maxEvents) * CHART_MAX_HEIGHT
+          const y = CHART_BASE_Y - barHeight
 
           return (
             <g key={i}>
@@ -62,15 +73,15 @@ export const EventChart = ({ events }: { events: any[] }) => {
         })}
 
         <polyline
-          points={dailyData.map((d, i) => `${60 + i * 48 + 15},${240 - (d.revenue / maxRevenue) * 180}`).join(' ')}
+          points={dailyData.map((d, i) => `${CHART_MARGIN_LEFT + i * CHART_BAR_WIDTH + 15},${CHART_BASE_Y - (d.revenue / maxRevenue) * CHART_MAX_HEIGHT}`).join(' ')}
           fill="none"
           stroke="#ef4444"
           strokeWidth="3"
         />
 
         {dailyData.map((d, i) => {
-          const x = 60 + i * 48 + 15
-          const y = 240 - (d.revenue / maxRevenue) * 180
+          const x = CHART_MARGIN_LEFT + i * CHART_BAR_WIDTH + 15
+          const y = CHART_BASE_Y - (d.revenue / maxRevenue) * CHART_MAX_HEIGHT
 
           return (
             <g key={i}>

@@ -1,5 +1,6 @@
 import { Event } from './types'
 import { v4 as uuidv4 } from 'uuid'
+import { FULL_COUNTRY_NAMES, DEVICE_TYPES, EVENT_TYPES, PAGE_URLS, MIN_REVENUE, MAX_REVENUE } from '../constants'
 
 // Deterministic pseudo RNG
 function mulberry32(a: number) {
@@ -16,9 +17,10 @@ export function generateEvents(seed: number, days = 30, count = 100_000): Event[
   const now = Date.now()
   const start = now - days * 24 * 60 * 60 * 1000
 
-  const countries = ['US', 'IN', 'DE', 'GB', 'CA', 'AU', 'BR', 'FR']
-  const devices = ['desktop', 'mobile', 'tablet'] as const
-  const urls = ['/home', '/pricing', '/docs', '/blog', '/checkout', '/signup']
+  const countries = FULL_COUNTRY_NAMES.slice(0, 12) // Use top 12 countries for variety
+  const devices = [...DEVICE_TYPES]
+  const urls = [...PAGE_URLS]
+  const eventTypes = [...EVENT_TYPES]
   const events: Event[] = []
 
   let users = Array.from({ length: 20_000 }, (_, i) => `u_${i}`)
@@ -32,7 +34,7 @@ export function generateEvents(seed: number, days = 30, count = 100_000): Event[
     const eventRoll = rand()
     const event: Event['event'] = eventRoll < 0.7 ? 'page_view' : eventRoll < 0.9 ? 'click' : eventRoll < 0.97 ? 'signup' : 'purchase'
 
-    const revenue = event === 'purchase' ? Math.round(10 + rand() * 200) : undefined
+    const revenue = event === 'purchase' ? Math.round(MIN_REVENUE + rand() * (MAX_REVENUE - MIN_REVENUE)) : undefined
     const userId = users[Math.floor(rand() * users.length)]
     const sessionId = sessions[Math.floor(rand() * sessions.length)]
 

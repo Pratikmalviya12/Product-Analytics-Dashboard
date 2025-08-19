@@ -5,10 +5,14 @@
 /* Theme-aware CSS variables */
 :root {
   --tooltip-bg: rgba(255, 255, 255, 0.95);
-  --tooltip-border: #ccc;
-  --tooltip-text: #333;
-  --chart-grid: #f0f0f0;
-  --chart-text: #666;
+  --tooltip-border: #cbd5e1;
+  --tooltip-text: #334155;
+  --chart-grid: #e2e8f0;
+  --chart-text: #64748b;
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(226, 232, 240, 0.5);
+  --shadow: rgba(0, 0, 0, 0.1);
+  --shadow-lg: rgba(0, 0, 0, 0.15);
 }
 
 .dark {
@@ -17,13 +21,44 @@
   --tooltip-text: #F9FAFB;
   --chart-grid: #4B5563;
   --chart-text: #9CA3AF;
+  --glass-bg: rgba(31, 41, 55, 0.8);
+  --glass-border: rgba(107, 114, 128, 0.3);
+  --shadow: rgba(0, 0, 0, 0.3);
+  --shadow-lg: rgba(0, 0, 0, 0.5);
 }
 
 /* Enhanced theme-consistent custom utilities */
 
-/* Glass morphism effect utilities */
+/* Light mode specific utilities */
+.light-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.light-card:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.light-header {
+  background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 50%, #ede9fe 100%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.light-surface {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+/* Glass morphism effect utilities - Optimized for performance */
 .glass {
-  @apply bg-white bg-opacity-10 backdrop-blur-lg border border-white border-opacity-20;
+  @apply border shadow-lg;
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
+  box-shadow: 0 8px 32px var(--shadow);
+  /* Removed backdrop-blur-lg for better scroll performance */
 }
 
 .dark .glass {
@@ -31,11 +66,17 @@
 }
 
 .glass-hover {
-  @apply hover:bg-white hover:bg-opacity-15;
+  @apply transition-all duration-300;
 }
 
-.dark .glass-hover {
-  @apply hover:bg-gray-800 hover:bg-opacity-20;
+.glass-hover:hover {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 12px 40px var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.dark .glass-hover:hover {
+  @apply bg-gray-800 bg-opacity-20;
 }
 
 .glass-card {
@@ -56,39 +97,239 @@
   @apply transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-xl;
 }
 
-/* Enhanced scrollbar styling */
+/* Enhanced scrollbar styling - Optimized */
 ::-webkit-scrollbar {
-  @apply w-2;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-white bg-opacity-5 rounded;
+  background: #f1f5f9;
+  border-radius: 4px;
 }
 
 .dark ::-webkit-scrollbar-track {
-  @apply bg-gray-800 bg-opacity-20 rounded;
+  background: #1e293b;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-white bg-opacity-30 rounded hover:bg-opacity-50;
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  @apply bg-gray-600 bg-opacity-50 rounded hover:bg-opacity-70;
+  background: #475569;
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Performance optimizations for scrolling */
+.scroll-container {
+  will-change: scroll-position;
+  transform: translateZ(0); /* Force GPU acceleration */
+}
+
+/* Prevent layout shifts during hover */
+.hover-card {
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Enhanced responsive design utilities */
+@media (max-width: 640px) {
+  .glass-card {
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+  
+  .dashboard-header {
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+  
+  /* Optimize typography for mobile */
+  h1 {
+    font-size: 1.25rem;
+    line-height: 1.25;
+  }
+  
+  h2 {
+    font-size: 1.125rem;
+    line-height: 1.25;
+  }
+  
+  /* Improve button spacing on mobile */
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .btn-group > * {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Stack charts vertically on tablet */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  /* Adjust KPI cards for tablet */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+}
+
+/* Enhanced animations with performance optimization */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.8s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.5s ease-out forwards;
+}
+
+/* Stagger animation for cards */
+.animate-stagger {
+  animation-delay: calc(var(--stagger) * 100ms);
+}
+
+/* Enhanced glass morphism with better performance */
+.glass-modern {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(31, 38, 135, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  /* Using backdrop-saturate instead of blur for better performance */
+  backdrop-filter: saturate(180%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark .glass-modern {
+  background: rgba(31, 41, 55, 0.85);
+  border: 1px solid rgba(75, 85, 99, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: saturate(180%);
+}
+
+/* Interactive hover states */
+.glass-modern:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 12px 40px rgba(31, 38, 135, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.dark .glass-modern:hover {
+  background: rgba(31, 41, 55, 0.95);
+  border-color: rgba(75, 85, 99, 0.4);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 /* Focus styles for accessibility */
 .focus-ring {
-  @apply focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-transparent;
+  outline: none;
 }
 
-/* Animation utilities */
+.focus-ring:focus {
+  box-shadow: 0 0 0 2px #6366f1, 0 0 0 4px rgba(99, 102, 241, 0.2);
+}
+
+/* Enhanced theme transition */
+* {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* Optimized performance for large lists */
+.virtual-list {
+  contain: layout style paint;
+  will-change: transform;
+}
+
+/* Improved mobile touch targets */
+@media (max-width: 640px) {
+  button, 
+  .btn,
+  select,
+  input[type="checkbox"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Ensure adequate spacing for touch */
+  .touch-target {
+    padding: 0.75rem;
+  }
+}
+
+/* Animation utilities - Optimized for performance */
 .animate-fade-in {
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeIn 0.2s ease-out;
 }
 
 .animate-slide-up {
-  animation: slideUp 0.3s ease-out;
+  animation: slideUp 0.2s ease-out;
 }
 
 @keyframes fadeIn {
@@ -195,4 +436,53 @@
 .ag-custom-ag .ag-cell { padding: 0 12px !important; }
 
 /* Pagination bar */
-.ag-custom-ag .ag-paging-panel { background-color: var(--ag-background-color) !important; }
+.ag-custom-ag .ag-paging-panel { 
+  background-color: var(--ag-background-color) !important; 
+  border-top: 1px solid var(--ag-border-color) !important;
+}
+
+/* Full width and responsive optimizations */
+.ag-custom-ag .ag-root-wrapper {
+  width: 100% !important;
+  min-width: 100% !important;
+}
+
+.ag-custom-ag .ag-header-viewport,
+.ag-custom-ag .ag-body-viewport {
+  width: 100% !important;
+}
+
+.ag-custom-ag .ag-center-cols-container {
+  width: 100% !important;
+}
+
+/* Ensure horizontal scroll when needed */
+.ag-custom-ag .ag-body-horizontal-scroll {
+  overflow-x: auto !important;
+}
+
+/* Responsive column handling */
+@media (max-width: 768px) {
+  .ag-custom-ag {
+    --ag-font-size: 11px;
+    --ag-header-height: 32px;
+    --ag-row-height: 36px;
+    --ag-cell-horizontal-padding: 8px;
+  }
+  
+  .ag-custom-ag .ag-cell {
+    padding: 0 8px !important;
+  }
+}
+
+/* Enhanced table styling for better integration */
+.ag-custom-ag {
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.ag-custom-ag .ag-root-wrapper {
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}

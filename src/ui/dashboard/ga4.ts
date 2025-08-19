@@ -1,6 +1,61 @@
 // GA4 Mock Data Generator - Simulates realistic analytics data
 // Note: Real GA4 integration requires a backend server due to CORS and security constraints
 
+import { getCountryName } from '../../utils/countryUtils'
+import {
+  BASE_SESSIONS_MIN,
+  BASE_SESSIONS_RANGE,
+  USER_SESSION_RATIO_MIN,
+  USER_SESSION_RATIO_RANGE,
+  PAGEVIEWS_PER_SESSION_MIN,
+  PAGEVIEWS_PER_SESSION_RANGE,
+  BOUNCE_RATE_MIN,
+  BOUNCE_RATE_RANGE,
+  SESSION_DURATION_MIN,
+  SESSION_DURATION_RANGE,
+  CONVERSION_RATE_MIN,
+  CONVERSION_RATE_RANGE,
+  REVENUE_PER_CONVERSION_MIN,
+  REVENUE_PER_CONVERSION_RANGE,
+  WEEKEND_TRAFFIC_MULTIPLIER,
+  AUTH_DELAY_MIN,
+  AUTH_DELAY_RANGE,
+  REALTIME_DATA_WINDOW_MINUTES,
+  HOURLY_VARIATION_AMPLITUDE,
+  RANDOM_VARIATION_MIN,
+  RANDOM_VARIATION_RANGE,
+  API_DELAY_MIN,
+  API_DELAY_RANGE,
+  QUICK_API_DELAY_MIN,
+  QUICK_API_DELAY_RANGE,
+  MIN_REALTIME_EVENTS,
+  MAX_REALTIME_EVENTS,
+  MS_PER_DAY,
+  AUTH_FAILURE_PROBABILITY,
+  PURCHASE_PROBABILITY,
+  ORGANIC_TRAFFIC_PROBABILITY,
+  SOCIAL_TRAFFIC_PROBABILITY,
+  MOCK_TOKEN_PREFIX,
+  DEFAULT_DATE_RANGE_START,
+  DEFAULT_DATE_RANGE_END,
+  TODAY_KEYWORD,
+  DAYS_AGO_SUFFIX,
+  DEFAULT_FALLBACK_DAYS,
+  MIN_REVENUE,
+  MAX_REVENUE
+} from '../../constants'
+import { 
+  GA4_EVENT_TYPES,
+  GA4_REALTIME_EVENT_TYPES,
+  DEVICE_TYPES,
+  BROWSER_TYPES,
+  TRAFFIC_SOURCES
+} from '../../constants/events'
+import { 
+  GA4_SIMULATION_COUNTRIES,
+  GA4_REALTIME_COUNTRIES
+} from '../../constants/countries'
+
 export const GA4_API_BASE = 'https://analyticsdata.googleapis.com/v1beta'
 
 // Generate realistic GA4-style mock data
@@ -15,14 +70,14 @@ const generateRealisticTimeSeries = (days: number = 30) => {
     
     // Simulate realistic patterns
     const isWeekend = date.getDay() === 0 || date.getDay() === 6
-    const baseTraffic = isWeekend ? 0.6 : 1.0
-    const hourlyVariation = Math.sin((i / days) * Math.PI * 2) * 0.3 + 1
-    const randomVariation = 0.8 + Math.random() * 0.4
+    const baseTraffic = isWeekend ? WEEKEND_TRAFFIC_MULTIPLIER : 1.0
+    const hourlyVariation = Math.sin((i / days) * Math.PI * 2) * HOURLY_VARIATION_AMPLITUDE + 1
+    const randomVariation = RANDOM_VARIATION_MIN + Math.random() * RANDOM_VARIATION_RANGE
     
-    const sessions = Math.floor(baseTraffic * hourlyVariation * randomVariation * (500 + Math.random() * 200))
-    const users = Math.floor(sessions * (0.7 + Math.random() * 0.2))
-    const pageViews = Math.floor(sessions * (2 + Math.random() * 3))
-    const bounceRate = 0.3 + Math.random() * 0.4
+    const sessions = Math.floor(baseTraffic * hourlyVariation * randomVariation * (BASE_SESSIONS_MIN + Math.random() * BASE_SESSIONS_RANGE))
+    const users = Math.floor(sessions * (USER_SESSION_RATIO_MIN + Math.random() * USER_SESSION_RATIO_RANGE))
+    const pageViews = Math.floor(sessions * (PAGEVIEWS_PER_SESSION_MIN + Math.random() * PAGEVIEWS_PER_SESSION_RANGE))
+    const bounceRate = BOUNCE_RATE_MIN + Math.random() * BOUNCE_RATE_RANGE
     
     data.push({
       date: date.toISOString().split('T')[0],
@@ -30,34 +85,34 @@ const generateRealisticTimeSeries = (days: number = 30) => {
       users,
       pageViews,
       bounceRate: Math.round(bounceRate * 100) / 100,
-      avgSessionDuration: Math.floor(120 + Math.random() * 300),
-      conversions: Math.floor(sessions * (0.02 + Math.random() * 0.03)),
-      revenue: Math.floor(sessions * (0.02 + Math.random() * 0.03) * (50 + Math.random() * 200))
+      avgSessionDuration: Math.floor(SESSION_DURATION_MIN + Math.random() * SESSION_DURATION_RANGE),
+      conversions: Math.floor(sessions * (CONVERSION_RATE_MIN + Math.random() * CONVERSION_RATE_RANGE)),
+      revenue: Math.floor(sessions * (CONVERSION_RATE_MIN + Math.random() * CONVERSION_RATE_RANGE) * (REVENUE_PER_CONVERSION_MIN + Math.random() * REVENUE_PER_CONVERSION_RANGE))
     })
   }
   
   return data
 }
 
-// Simulate GA4 authentication check (mock)
-export const getAccessToken = async (serviceAccountJson: any) => {
+// Mock function for getAccessToken
+const getAccessToken = async (serviceAccountJson: any): Promise<string> => {
   // Simulate authentication delay
-  await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000))
+  await new Promise(resolve => setTimeout(resolve, AUTH_DELAY_MIN + Math.random() * AUTH_DELAY_RANGE))
   
   if (!serviceAccountJson || !serviceAccountJson.client_email) {
     throw new Error('Invalid service account configuration')
   }
   
   // Simulate some authentication failures for realism
-  if (Math.random() < 0.1) {
+  if (Math.random() < AUTH_FAILURE_PROBABILITY) {
     throw new Error('Authentication failed: Invalid credentials')
   }
   
-  return 'mock_access_token_' + Date.now()
+  return MOCK_TOKEN_PREFIX + Date.now()
 }
 
 // Mock GA4 data fetching with realistic simulation
-export const fetchGA4Data = async (propertyId: string, serviceAccountJson: any, dateRange = { start: '30daysAgo', end: 'today' }) => {
+export const fetchGA4Data = async (propertyId: string, serviceAccountJson: any, dateRange = { start: DEFAULT_DATE_RANGE_START, end: DEFAULT_DATE_RANGE_END }) => {
   try {
     console.log('🔄 Simulating GA4 data fetch...', { propertyId, dateRange })
     
@@ -70,7 +125,7 @@ export const fetchGA4Data = async (propertyId: string, serviceAccountJson: any, 
     console.log('✅ Mock authentication successful')
     
     // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1200))
+    await new Promise(resolve => setTimeout(resolve, API_DELAY_MIN + Math.random() * API_DELAY_RANGE))
     
     // Generate realistic mock data
     const days = calculateDaysBetween(dateRange.start, dateRange.end)
@@ -90,23 +145,23 @@ export const fetchGA4Data = async (propertyId: string, serviceAccountJson: any, 
 
 // Helper function to calculate days between dates
 const calculateDaysBetween = (start: string, end: string) => {
-  if (start.includes('daysAgo')) {
-    return parseInt(start.replace('daysAgo', '')) || 30
+  if (start.includes(DAYS_AGO_SUFFIX)) {
+    return parseInt(start.replace(DAYS_AGO_SUFFIX, '')) || DEFAULT_FALLBACK_DAYS
   }
   
   const startDate = new Date(start)
-  const endDate = end === 'today' ? new Date() : new Date(end)
+  const endDate = end === TODAY_KEYWORD ? new Date() : new Date(end)
   const diffTime = Math.abs(endDate.getTime() - startDate.getTime())
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  return Math.ceil(diffTime / MS_PER_DAY)
 }
 
 // Convert time series data to event format
 const generateEventsFromTimeSeries = (timeSeriesData: any[]): any[] => {
   const events: any[] = []
-  const eventTypes = ['page_view', 'click', 'scroll', 'search', 'purchase', 'signup']
-  const devices = ['desktop', 'mobile', 'tablet']
-  const countries = ['US', 'GB', 'CA', 'DE', 'FR', 'AU', 'JP', 'IN', 'BR', 'MX']
-  const browsers = ['Chrome', 'Safari', 'Firefox', 'Edge']
+  const eventTypes = [...GA4_EVENT_TYPES]
+  const devices = [...DEVICE_TYPES]
+  const countries = [...GA4_SIMULATION_COUNTRIES]
+  const browsers = [...BROWSER_TYPES]
   
   timeSeriesData.forEach((dayData, dayIndex) => {
     const date = new Date(dayData.date)
@@ -127,11 +182,11 @@ const generateEventsFromTimeSeries = (timeSeriesData: any[]): any[] => {
         device: devices[Math.floor(Math.random() * devices.length)],
         country: countries[Math.floor(Math.random() * countries.length)],
         browser: browsers[Math.floor(Math.random() * browsers.length)],
-        revenue: Math.random() < 0.05 ? Math.floor(Math.random() * 500) + 10 : 0,
+        revenue: Math.random() < PURCHASE_PROBABILITY ? Math.floor(Math.random() * MAX_REVENUE) + MIN_REVENUE : 0,
         properties: {
           page_title: `Page ${Math.floor(Math.random() * 50) + 1}`,
-          source: Math.random() < 0.5 ? 'organic' : 'direct',
-          medium: Math.random() < 0.3 ? 'social' : 'organic',
+          source: Math.random() < ORGANIC_TRAFFIC_PROBABILITY ? TRAFFIC_SOURCES[0] : TRAFFIC_SOURCES[1],
+          medium: Math.random() < SOCIAL_TRAFFIC_PROBABILITY ? TRAFFIC_SOURCES[2] : TRAFFIC_SOURCES[0],
           campaign: Math.random() < 0.2 ? `campaign_${Math.floor(Math.random() * 10)}` : null,
           ga4_session_id: `ga4_session_${Date.now()}_${i}`,
           engagement_time_msec: Math.floor(Math.random() * 300000) + 1000
@@ -156,16 +211,16 @@ export const fetchGA4RealtimeData = async (propertyId: string, serviceAccountJso
     await getAccessToken(serviceAccountJson)
     
     // Simulate API delay for real-time data (shorter)
-    await new Promise(resolve => setTimeout(resolve, 200 + Math.random() * 300))
+    await new Promise(resolve => setTimeout(resolve, QUICK_API_DELAY_MIN + Math.random() * QUICK_API_DELAY_RANGE))
     
     // Generate realistic real-time events (last few minutes)
     const realtimeEvents: any[] = []
-    const eventTypes = ['page_view', 'click', 'scroll', 'search', 'purchase']
-    const devices = ['desktop', 'mobile', 'tablet']
-    const countries = ['US', 'GB', 'CA', 'DE', 'FR', 'AU', 'JP', 'IN']
+    const eventTypes = [...GA4_REALTIME_EVENT_TYPES]
+    const devices = [...DEVICE_TYPES]
+    const countries = [...GA4_REALTIME_COUNTRIES]
     
     const now = Date.now()
-    const eventsCount = Math.floor(Math.random() * 10) + 2 // 2-12 events
+    const eventsCount = Math.floor(Math.random() * (MAX_REALTIME_EVENTS - MIN_REALTIME_EVENTS + 1)) + MIN_REALTIME_EVENTS
     
     for (let i = 0; i < eventsCount; i++) {
       const timestamp = now - Math.floor(Math.random() * 300000) // Last 5 minutes
@@ -209,7 +264,7 @@ export const transformGA4Response = (ga4Data: any) => {
 
     const eventName = dimensions[0]?.value || 'unknown'
     const device = dimensions[1]?.value || 'desktop'
-    const country = dimensions[2]?.value || 'US'
+    const country = dimensions[2]?.value || 'United States'
     const date = dimensions[3]?.value || '20250812'
 
     const eventCount = parseInt(metrics[0]?.value || '1')
@@ -220,7 +275,7 @@ export const transformGA4Response = (ga4Data: any) => {
         date.substring(0, 4),
         parseInt(date.substring(4, 6)) - 1,
         date.substring(6, 8)
-      ).getTime() + Math.random() * 24 * 60 * 60 * 1000
+      ).getTime() + Math.random() * MS_PER_DAY
 
       events.push({
         id: `ga4_event_${index}_${i}`,
@@ -229,7 +284,7 @@ export const transformGA4Response = (ga4Data: any) => {
         timestamp,
         event: mapGA4EventName(eventName),
         device: mapGA4Device(device),
-        country: country.substring(0, 2).toUpperCase(),
+        country: getCountryName(country),
         revenue: eventName === 'purchase' ? revenue / eventCount : 0,
       })
     }
@@ -250,12 +305,12 @@ export const transformGA4RealtimeResponse = (ga4Data: any) => {
 
     const eventName = dimensions[0]?.value || 'unknown'
     const device = dimensions[1]?.value || 'desktop'
-    const country = dimensions[2]?.value || 'US'
+    const country = dimensions[2]?.value || 'United States'
 
     const eventCount = parseInt(metrics[1]?.value || '1')
 
     for (let i = 0; i < Math.min(eventCount, 5); i++) {
-      const timestamp = now - Math.random() * 30 * 60 * 1000
+      const timestamp = now - Math.random() * REALTIME_DATA_WINDOW_MINUTES * 60 * 1000
 
       events.push({
         id: `ga4_realtime_${index}_${i}`,
@@ -264,7 +319,7 @@ export const transformGA4RealtimeResponse = (ga4Data: any) => {
         timestamp,
         event: mapGA4EventName(eventName),
         device: mapGA4Device(device),
-        country: country.substring(0, 2).toUpperCase(),
+        country: getCountryName(country),
         revenue: eventName === 'purchase' ? Math.random() * 200 + 10 : 0,
       })
     }

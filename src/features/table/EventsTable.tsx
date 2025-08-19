@@ -29,17 +29,13 @@ const columns = [
 	}),
 	columnHelper.accessor('userId', {
 		header: 'User ID',
-		cell: (info) => info.getValue().slice(0, 8) + '...',
+		cell: (info) => info.getValue(),
 		size: 120,
 	}),
 	columnHelper.accessor('sessionId', {
 		header: 'Session ID',
-		cell: (info) => info.getValue().slice(0, 8) + '...',
+		cell: (info) => info.getValue(),
 		size: 140,
-	}),
-	columnHelper.accessor('url', {
-		header: 'URL',
-		size: 180,
 	}),
 	columnHelper.accessor('device', {
 		header: 'Device',
