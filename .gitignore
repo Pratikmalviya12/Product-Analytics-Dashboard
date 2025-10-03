@@ -12,6 +12,11 @@ build/
 .next/
 out/
 
+# TypeScript compiled outputs - DON'T PUSH (generated from .ts/.tsx files)
+src/**/*.js
+src/**/*.jsx
+*.tsbuildinfo
+
 # Environment variables - DON'T PUSH (contains secrets)
 .env
 .env.local

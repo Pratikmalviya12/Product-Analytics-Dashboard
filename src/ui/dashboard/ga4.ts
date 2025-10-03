@@ -349,4 +349,4 @@ export const mapGA4Device = (ga4Device: string) => {
     tablet: 'tablet',
   }
   return mapping[ga4Device.toLowerCase()] || 'desktop'
-}
+} 
